@@ -150,9 +150,36 @@ nav a.active {
 }
 
 .service-card {
-  flex: 1 1 calc(25% - 10px); /* Было: 33.333% */
-  font-size: 14px; /* Меньший текст */
-  padding: 12px; /* Было: 16px */
+  flex: 1 1 calc(25% - 10px);
+  font-size: 14px;
+  padding: 12px;
+  background-color: #491b5f;
+  border: 2px solid #cba0ff; /* тонкая обводка */
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 180px; /* фиксированная высота для квадратного вида */
+  box-sizing: border-box;
+  transition: background-color 0.3s, transform 0.3s;
+  cursor: pointer;
+}
+
+.service-card:hover {
+  background-color: #7c2c8d;
+  transform: scale(1.05);
+}
+
+.service-card .service-name {
+  font-weight: 700;
+  font-size: 1.1em;
+  color: #e6d6f3;
+}
+
+.service-card .service-price {
+  font-size: 1em;
+  color: #d7b0f2;
+  text-align: right;
 }
 
 .service-card:hover {
