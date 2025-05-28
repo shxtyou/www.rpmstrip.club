@@ -1,183 +1,161 @@
-const webhookURL = 'https://discord.com/api/webhooks/XXXXXXXXX/REDACTED';
+document.addEventListener("DOMContentLoaded", () => {
+  // Вкладки
+  const tabs = document.querySelectorAll(".tab-link");
+  const cards = document.querySelectorAll(".card:not(.reviews-list):not(.order-popup)");
 
-// Прайс
-const services = {
-  "Стандарт (1 час)": 40000,
-  "Минет": 25000,
-  "Фемдом": 38000,
-  "Подчинение": 80000,
-  "Шибари": 20000,
-  "BDSM": 40000,
-  "Фут Джоб": 20000,
-  "Тит Джоб": 20000,
-  "Спанкинг": 15000,
-  "Пеггинг": 15000,
-  "Бондаж": 20000,
-  "Игры с воском": 17000,
-  "Ролевая игра": 24000, // 20k + 4k за сценарий
-  "МейлДом": 22000,
-  "Стриптиз / Приват-танец": 10000,
-  "Совместная ванна + массаж": 25000,
-  "Ночь со мной": 100000,
-  "Фото-/видеосъёмка + сопровождение": 80000,
-  "VIP Клиент": 0 // Убрал ошибку с "200.000%"
-};
+  tabs.forEach(tab => {
+    tab.addEventListener("click", e => {
+      e.preventDefault();
+      const target = tab.dataset.tab;
 
-const promoCodes = {
-  "YPA": { discount: 5, expires: new Date("2025-05-29T16:00:00") },
-  "ONYX-2025-ELITE-XR": { discount: 10, expires: new Date("2099-12-31T23:59:59") }
-};
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
 
-// --- Табы ---
-document.querySelectorAll('.tab-link').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const tab = link.dataset.tab;
-    document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(tab).classList.add('active');
-    link.classList.add('active');
-  });
-});
-
-// --- Субтабы ---
-document.querySelectorAll('.sub-tab').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const subtab = btn.dataset.subtab;
-    document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('active'));
-    document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
-    document.getElementById(subtab).classList.add('active');
-    btn.classList.add('active');
-  });
-});
-
-// --- Заполнение селекта услуг ---
-const serviceSelect = document.getElementById("selectedService");
-
-function fillServiceSelect() {
-  serviceSelect.innerHTML = "";
-  // Добавим сначала интимные услуги
-  Object.entries(services).forEach(([name, price]) => {
-    // Пропускаем VIP Клиент, он не для заказа
-    if (name === "VIP Клиент") return;
-
-    const option = document.createElement("option");
-    option.value = name;
-    option.textContent = `${name} — ${price.toLocaleString()}$`;
-    serviceSelect.appendChild(option);
-  });
-}
-
-fillServiceSelect();
-
-// --- Проверка и подсчёт цены ---
-function updatePrice() {
-  const selected = serviceSelect.value;
-  const base = services[selected] || 0;
-  const promo = document.getElementById("promoCode").value.trim();
-  const warning = document.getElementById("promoWarning");
-  warning.style.display = "none";
-
-  let final = base;
-
-  if (promo.length > 0) {
-    if (promoCodes[promo]) {
-      const { discount, expires } = promoCodes[promo];
-      const now = new Date();
-      if (now <= expires) {
-        final -= (base * discount) / 100;
-      } else {
-        warning.textContent = "Промокод просрочен";
-        warning.style.display = "block";
-      }
-    } else {
-      warning.textContent = "Промокод неверен";
-      warning.style.display = "block";
-    }
-  }
-
-  document.getElementById("finalPrice").textContent = final.toLocaleString() + "$";
-  return final;
-}
-
-serviceSelect.addEventListener("change", updatePrice);
-document.getElementById("promoCode").addEventListener("input", updatePrice);
-
-// --- Заказ ---
-document.getElementById("orderForm").addEventListener("submit", async e => {
-  e.preventDefault();
-
-  const discordNick = document.getElementById("discordNick").value.trim();
-  const rpmNick = document.getElementById("rpmNick").value.trim();
-  const selectedService = serviceSelect.value;
-  const orderDate = document.getElementById("orderDate").value;
-  const promoCode = document.getElementById("promoCode").value.trim();
-  const finalPrice = updatePrice();
-
-  if (!discordNick || !rpmNick || !selectedService || !orderDate) {
-    alert("Пожалуйста, заполните все обязательные поля.");
-    return;
-  }
-
-  const message = 
-    `📦 Новый заказ:\n` +
-    `**Discord:** ${discordNick}\n` +
-    `**РПМ:** ${rpmNick}\n` +
-    `**Услуга:** ${selectedService}\n` +
-    `**Дата:** ${orderDate}\n` +
-    `**Промокод:** ${promoCode || "нет"}\n` +
-    `**Итоговая цена:** ${finalPrice.toLocaleString()}$`;
-
-  try {
-    const resp = await fetch(webhookURL, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ content: message })
+      cards.forEach(c => {
+        c.id === target ? c.classList.add("active") : c.classList.remove("active");
+      });
     });
-    if (!resp.ok) throw new Error("Ошибка сети");
-    alert("Заказ успешно отправлен!");
-    e.target.reset();
-    document.getElementById("finalPrice").textContent = "0$";
-    document.getElementById("order").style.display = "none";
-  } catch (err) {
-    alert("Ошибка при отправке заказа.");
+  });
+
+  // Сабвкладки прайса
+  const subTabs = document.querySelectorAll(".sub-tab");
+  const subCards = document.querySelectorAll(".sub-card");
+
+  subTabs.forEach(subTab => {
+    subTab.addEventListener("click", () => {
+      const target = subTab.dataset.subtab;
+
+      subTabs.forEach(st => st.classList.remove("active"));
+      subTab.classList.add("active");
+
+      subCards.forEach(sc => {
+        sc.id === target ? sc.classList.add("active") : sc.classList.remove("active");
+      });
+
+      populateServicesDropdown(target);
+    });
+  });
+
+  // Элементы формы заказа
+  const orderPopup = document.getElementById("order");
+  const selectedService = document.getElementById("selectedService");
+  const finalPriceEl = document.getElementById("finalPrice");
+  const promoCodeInput = document.getElementById("promoCode");
+  const promoWarning = document.getElementById("promoWarning");
+  const orderForm = document.getElementById("orderForm");
+  const closeOrderBtn = document.getElementById("closeOrder");
+
+  // Данные по услугам с ценами
+  const servicesData = {
+    intim: [
+      {name: "Минет", price: 25000},
+      {name: "Фемдом", price: 38000},
+      {name: "Подчинение", price: 80000},
+      {name: "Шибари", price: 20000},
+      {name: "BDSM", price: 40000},
+      {name: "Фут Джоб", price: 20000},
+      {name: "Тит Джоб", price: 20000},
+      {name: "Спанкинг", price: 15000},
+      {name: "Пеггинг", price: 15000},
+      {name: "Бондаж", price: 20000},
+      {name: "Игры с воском", price: 17000},
+      {name: "Ролевая игра (Сценарий + 4,000$)", price: 20000},
+      {name: "МейлДом", price: 22000}
+    ],
+    extra: [
+      {name: "Стриптиз / Приват-танец", price: 10000},
+      {name: "Совместная ванна + массаж", price: 25000},
+      {name: "Ночь со мной", price: 100000},
+      {name: "Фото-/видеосъёмка + сопровождение", price: 80000},
+      {name: "VIP Клиент", price: 200000}
+    ]
+  };
+
+  // Промокоды с датой истечения и скидкой в процентах
+  const promoCodes = {
+    "VELVET10": {expires: "2025-12-31", discountPercent: 10},
+    "SPRING20": {expires: "2024-05-31", discountPercent: 20},
+    "OLD50": {expires: "2023-01-01", discountPercent: 50}
+  };
+
+  // Заполнить dropdown услугами
+  function populateServicesDropdown(category) {
+    selectedService.innerHTML = "";
+    servicesData[category].forEach(s => {
+      const option = document.createElement("option");
+      option.value = s.name;
+      option.textContent = `${s.name} — ${s.price.toLocaleString()}$`;
+      selectedService.appendChild(option);
+    });
+    calculatePrice();
   }
-});
 
-// --- Закрытие окна заказа ---
-document.getElementById("closeOrder").addEventListener("click", () => {
-  document.getElementById("order").style.display = "none";
-});
+  // Открыть popup заказа с выбранной услугой
+  document.querySelectorAll(".service-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const serviceName = card.dataset.service;
+      let category = "intim";
+      if (servicesData.extra.some(s => s.name === serviceName)) category = "extra";
+      if (servicesData.intim.some(s => s.name === serviceName)) category = "intim";
 
-// --- Отзывы ---
-document.getElementById("reviewForm").addEventListener("submit", e => {
-  e.preventDefault();
-  const name = document.getElementById("reviewName").value.trim();
-  const text = document.getElementById("reviewText").value.trim();
-  const date = new Date().toLocaleString();
+      subTabs.forEach(st => st.classList.toggle("active", st.dataset.subtab === category));
+      subCards.forEach(sc => sc.classList.toggle("active", sc.id === category));
 
-  if (!name || !text) {
-    alert("Пожалуйста, заполните все поля в отзыве.");
-    return;
+      populateServicesDropdown(category);
+
+      selectedService.value = serviceName;
+      calculatePrice();
+
+      orderPopup.style.display = "block";
+    });
+  });
+
+  // Закрыть заказ
+  closeOrderBtn.addEventListener("click", () => {
+    orderPopup.style.display = "none";
+    promoWarning.style.display = "none";
+    promoCodeInput.value = "";
+    finalPriceEl.textContent = "0$";
+    orderForm.reset();
+  });
+
+  // Проверка и расчет цены с промокодом
+  function calculatePrice() {
+    const serviceName = selectedService.value;
+    const promoCode = promoCodeInput.value.trim().toUpperCase();
+
+    let price = 0;
+    for (const cat of Object.values(servicesData)) {
+      const service = cat.find(s => s.name === serviceName);
+      if (service) {
+        price = service.price;
+        break;
+      }
+    }
+
+    promoWarning.style.display = "none";
+
+    if (promoCode) {
+      if (promoCodes[promoCode]) {
+        const now = new Date();
+        const exp = new Date(promoCodes[promoCode].expires);
+        if (exp >= now) {
+          const discount = promoCodes[promoCode].discountPercent;
+          price = Math.round(price * (1 - discount / 100));
+        } else {
+          promoWarning.style.display = "block";
+        }
+      } else {
+        promoWarning.style.display = "block";
+      }
+    }
+
+    finalPriceEl.textContent = price.toLocaleString() + "$";
   }
 
-  const reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-  reviews.unshift({name, text, date});
-  localStorage.setItem("reviews", JSON.stringify(reviews));
+  selectedService.addEventListener("change", calculatePrice);
+  promoCodeInput.addEventListener("input", calculatePrice);
 
-  renderReviews();
-  e.target.reset();
+  // Инициализация dropdown при загрузке (интим услуги)
+  populateServicesDropdown("intim");
 });
-
-function renderReviews() {
-  const reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-  const container = document.getElementById("reviewsList");
-  container.innerHTML = reviews.map(r =>
-    `<div class="review">
-      <strong>${r.name}</strong> <span>${r.date}</span>
-      <p>${r.text}</p>
-    </div>`
-  ).join("");
-}
-
-renderReviews();
