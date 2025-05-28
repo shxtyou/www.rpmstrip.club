@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPM Услуги</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>RPM Услуги</h1>
+    <nav>
+      <a href="#" class="tab-link active" data-tab="main">Все услуги</a>
+      <a href="#" class="tab-link" data-tab="vip">VIP Клиент</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card active" id="main">
+      <div class="services-grid">
+        <div class="service-card" data-service="Минет">
+          <div class="service-name">Минет</div>
+          <div class="service-price">25 000 руб.</div>
+        </div>
+        <div class="service-card" data-service="BDSM">
+          <div class="service-name">BDSM</div>
+          <div class="service-price">40 000 руб.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="vip">
+      <div class="services-grid">
+        <div class="service-card" data-service="VIP Клиент">
+          <div class="service-name">VIP Клиент</div>
+          <div class="service-price">200 000 руб.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="order" style="display: none;">
+      <form id="orderForm">
+        <input type="hidden" id="selectedService">
+        <label>Ваш Discord: <input type="text" id="discordNick" required></label>
+        <label>Ваш RPM Ник: <input type="text" id="rpmNick" required></label>
+        <label id="promoGroup">Промокод: <input type="text" id="promoCode"></label>
+        <label>Дата: <input type="date" id="orderDate" required></label>
+        <input type="text" id="selectedServiceDisplay" disabled>
+        <button type="submit">Отправить</button>
+      </form>
+      <button id="closeOrder">Закрыть</button>
+    </div>
+  </main>
+
+  <div id="promoPopup" style="display: none;">Используй промокод YPA и получи скидку!</div>
+  <button id="orderToggle">Заказать</button>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
