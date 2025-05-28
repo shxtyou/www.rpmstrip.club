@@ -100,6 +100,13 @@ nav a.active {
   box-shadow: 0 4px 25px #cfa3ffcc;
 }
 
+/* Подсветка выбранной услуги */
+.service-card.selected {
+  background-color: #a347c7;
+  box-shadow: 0 0 20px #d1aaff;
+  transform: scale(1.1);
+}
+
 /* Промокод popup */
 .promo-popup {
   position: fixed;
@@ -142,4 +149,75 @@ button:hover, input[type="submit"]:hover {
 
 input, textarea {
   width: 100%;
-  padding
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #9c7ed6;
+  background-color: #6b3e8a;
+  color: #eee;
+  font-size: 14px;
+  margin-bottom: 15px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+/* Заказ popup */
+.order-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -20px);
+  background-color: #4e1e61;
+  color: #fff;
+  padding: 25px 30px;
+  border-radius: 20px;
+  box-shadow: 0 6px 40px rgba(201, 138, 255, 0.75);
+  z-index: 10000;
+  width: 350px;
+  max-width: 90%;
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  user-select: none;
+}
+
+.order-popup h2 {
+  margin-top: 0;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.order-popup label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.order-popup button#closeOrder {
+  background-color: #a347c7;
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Отзывы */
+.reviews-list {
+  margin-top: 15px;
+}
+
+.review {
+  background-color: #3a1452;
+  padding: 12px 15px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 0 6px #9f7adeaa;
+}
+
+.review strong {
+  color: #d0b7ff;
+}
+
+.review-date {
+  float: right;
+  font-size: 11px;
+  color: #b3a0c2;
+  font-weight: 400;
+}
