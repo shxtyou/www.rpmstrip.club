@@ -1,16 +1,6 @@
-// Показ промокода при загрузке
-window.addEventListener('load', () => {
-  const promoDeadline = new Date("2025-05-29T16:00:00");
-  if (new Date() < promoDeadline) {
-    const promo = document.getElementById("promoPopup");
-    promo.style.display = "block";
-    setTimeout(() => {
-      promo.style.display = "none";
-    }, 10000);
-  }
-});
+const webhookURL = 'https://discord.com/api/webhooks/1377196690099933279/o4XKVX179xTD6IV9FIG-kRg9w_t8XDlBG_xewTh2uRVLJfxvgzUpJtS6rFwOw5eXSID1';
 
-// Вкладки
+// Переключение вкладок
 document.querySelectorAll('.tab-link').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -24,136 +14,88 @@ document.querySelectorAll('.tab-link').forEach(link => {
   });
 });
 
-// Открытие и закрытие окна заказа
-const orderToggle = document.getElementById('orderToggle');
-const orderPopup = document.getElementById('order');
-const closeOrderBtn = document.getElementById('closeOrder');
-
-orderToggle.addEventListener('click', () => {
-  orderPopup.style.display = orderPopup.style.display === 'block' ? 'none' : 'block';
-});
-
-closeOrderBtn.addEventListener('click', () => {
-  orderPopup.style.display = 'none';
-});
-
-// Открытие формы при клике на карточку
+// Открытие формы заказа при выборе услуги
 document.querySelectorAll('.service-card').forEach(card => {
   card.addEventListener('click', () => {
     const selectedService = card.dataset.service;
     document.getElementById('selectedService').value = selectedService;
     document.getElementById('selectedServiceDisplay').value = selectedService;
-
     document.getElementById('order').style.display = 'block';
-    toggleFieldsVisibility(selectedService);
   });
 });
 
-function toggleFieldsVisibility(serviceName) {
-  const promoGroup = document.getElementById('promoGroup');
-  const orderDate = document.getElementById('orderDate');
+// Закрытие формы заказа
+document.getElementById('closeOrder').addEventListener('click', () => {
+  document.getElementById('order').style.display = 'none';
+});
 
-  if (serviceName.toLowerCase().includes('vip')) {
-    promoGroup.style.display = 'none';
-    orderDate.style.display = 'none';
-    orderDate.removeAttribute('required');
-  } else {
-    promoGroup.style.display = 'block';
-    orderDate.style.display = 'block';
-    orderDate.setAttribute('required', 'true');
-  }
-}
-
-// Отправка формы на Discord webhook
-const form = document.getElementById('orderForm');
-form.addEventListener('submit', async (e) => {
+// Отправка заказа
+document.getElementById('orderForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const discordNick = form.discordNick.value.trim();
-  const rpmNick = form.rpmNick.value.trim();
-  const service = form.selectedService.value.trim();
-  const orderDate = form.orderDate.value;
-  const promoCode = form.promoCode.value.trim();
+  const discordNick = document.getElementById('discordNick').value.trim();
+  const rpmNick = document.getElementById('rpmNick').value.trim();
+  const service = document.getElementById('selectedService').value.trim();
+  const date = document.getElementById('orderDate').value;
+  const promo = document.getElementById('promoCode').value.trim();
 
-  if (!discordNick || !rpmNick || !service) {
-    alert('Пожалуйста, заполните все обязательные поля.');
-    return;
-  }
-
-  const webhookURL = 'https://discord.com/api/webhooks/1377196690099933279/o4XKVX179xTD6IV9FIG-kRg9w_t8XDlBG_xewTh2uRVLJfxvgzUpJtS6rFwOw5eXSID1';
-
-  let content = `Новый заказ от **${discordNick}** (РПМ: ${rpmNick})\nУслуга: **${service}**`;
-  if (!service.toLowerCase().includes('vip')) {
-    content += `\nДата: ${orderDate || 'не указана'}`;
-    content += `\nПромокод: ${promoCode || 'нет'}`;
-  }
+  const content = `📦 Новый заказ:
+**Discord:** ${discordNick}
+**РПМ:** ${rpmNick}
+**Услуга:** ${service}
+**Дата:** ${date || 'не указана'}
+**Промокод:** ${promo || 'нет'}`;
 
   try {
-    const res = await fetch(webhookURL, {
+    await fetch(webhookURL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content })
     });
-
-    if (res.ok) {
-      alert('Заказ успешно отправлен! Спасибо.');
-      form.reset();
-      orderPopup.style.display = 'none';
-    } else {
-      alert('Ошибка при отправке заказа. Попробуйте позже.');
-    }
+    alert('Заказ отправлен!');
+    e.target.reset();
+    document.getElementById('order').style.display = 'none';
   } catch (err) {
-    alert('Ошибка при отправке заказа. Проверьте подключение к интернету.');
+    alert('Ошибка отправки заказа!');
   }
 });
 
-
-// Обработка формы отзывов
+// Отзывы
 const reviewForm = document.getElementById("reviewForm");
 const reviewsList = document.getElementById("reviewsList");
 
-reviewForm.addEventListener("submit", (e) => {
+reviewForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = document.getElementById("reviewName").value.trim();
   const text = document.getElementById("reviewText").value.trim();
+  const date = new Date().toLocaleString();
 
-  if (!name || !text) return alert("Пожалуйста, заполните все поля.");
+  if (!name || !text) return alert("Заполните все поля!");
 
-  const review = { name, text, date: new Date().toLocaleString() };
+  const review = { name, text, date };
   const reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
   reviews.unshift(review);
   localStorage.setItem("reviews", JSON.stringify(reviews));
+  renderReviews();
 
-reviewForm.reset();
-sendReviewToDiscord(review);
-renderReviews();
+  const content = `💬 Новый отзыв от **${name}** (${date}):\n${text}`;
+  await fetch(webhookURL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content })
+  });
 
+  reviewForm.reset();
 });
 
 function renderReviews() {
   const reviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-  reviewsList.innerHTML = reviews.map(r =>
-    `<div class="review">
-      <strong>${r.name}</strong> <span class="review-date">${r.date}</span><br />
+  reviewsList.innerHTML = reviews.map(r => `
+    <div class="review">
+      <strong>${r.name}</strong> <span class="review-date">${r.date}</span><br/>
       <p>${r.text}</p>
-    </div>`
-  ).join("");
+    </div>
+  `).join("");
 }
 
 renderReviews();
-
-// Отправка отзыва на Discord Webhook
-const webhookURL = "https://discord.com/api/webhooks/1377196690099933279/o4XKVX179xTD6IV9FIG-kRg9w_t8XDlBG_xewTh2uRVLJfxvgzUpJtS6rFwOw5eXSID1";
-
-async function sendReviewToDiscord(review) {
-  const content = `📣 Новый отзыв от **${review.name}** (${review.date}):\n${review.text}`;
-  try {
-    await fetch(webhookURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content })
-    });
-  } catch (e) {
-    console.error("Ошибка отправки в Discord:", e);
-  }
-}
