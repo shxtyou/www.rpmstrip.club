@@ -28,8 +28,8 @@
         оформляются прямо через сайт.<br><br>
         ⚠️ <em>Наша деятельность является нелегальной в данном штате. Любая информация, представленная на сайте, строго конфиденциальна и не должна попадать в руки государственных или правоохранительных органов.</em><br><br>
         Связь с организатором:<br>
-        Discord: <code>wsometeazew</code><br>
-        Telegram: <code>@crips_someteaze</code><br>
+        Discord: <code>wsometeazew</code><br />
+        Telegram: <code>@crips_someteaze</code><br />
         Присоединяйтесь и получите 5% скидку с промокодом <strong>YRA</strong>!
       </p>
     </div>
@@ -69,52 +69,50 @@
         <li>Персональный менеджер</li>
         <li>Приоритет обслуживания</li>
         <li>10% скидка на все заказы</li>
-        <li>Эксклюзивные сценарии</li>
-        <li>VIP роль в дискорд сервере</li>
+        <li>Эксклюзивные услуги и бонусы</li>
       </ul>
     </div>
 
-    <div class="card">
-      <h2>💬 Отзывы</h2>
-      <form id="reviewForm">
-        <label for="reviewName">Имя:</label><br />
-        <input type="text" id="reviewName" required /><br />
-        <label for="reviewText">Отзыв:</label><br />
-        <textarea id="reviewText" rows="3" required></textarea><br />
-        <button type="submit">Отправить</button>
-      </form>
-      <div id="reviewsList" class="reviews-list"></div>
+    <div style="text-align:center; margin-top: 20px;">
+      <button id="orderToggle">Оформить заказ</button>
     </div>
-  </div>
 
-  <img src="https://cdn-icons-png.flaticon.com/512/34/34568.png"
-    alt="Корзина" class="order-icon" id="orderToggle" title="Оформить заказ" />
+    <!-- Popup форма заказа -->
+    <div id="order" class="order-popup" aria-hidden="true">
+      <h2>Оформление заказа</h2>
+      <form id="orderForm">
+        <label for="selectedServiceDisplay">Выбранная услуга</label>
+        <input type="text" id="selectedServiceDisplay" name="selectedServiceDisplay" readonly placeholder="Выберите услугу из списка" />
 
-  <div id="order" class="order-popup">
-    <h2>Оформление заказа</h2>
-    <form id="orderForm">
-      <label for="discordNick">Ник Discord:</label>
-      <input type="text" id="discordNick" name="discordNick" required />
+        <input type="hidden" id="selectedService" name="selectedService" />
 
-      <label for="rpmNick">Ваш РПМ-ник:</label>
-      <input type="text" id="rpmNick" name="rpmNick" required />
+        <label for="discordNick">Discord Ник</label>
+        <input type="text" id="discordNick" name="discordNick" required placeholder="Ваш Discord ник" />
 
-      <label for="selectedServiceDisplay">Выбранная услуга:</label>
-      <input type="text" id="selectedServiceDisplay" readonly />
+        <label for="rpmNick">RPM Ник</label>
+        <input type="text" id="rpmNick" name="rpmNick" required placeholder="Ваш RPM ник" />
 
-      <input type="hidden" id="selectedService" name="service" required />
+        <label for="orderDate">Дата заказа</label>
+        <input type="date" id="orderDate" name="orderDate" required />
 
-      <label for="orderDate">Дата проведения услуги:</label>
-      <input type="date" id="orderDate" name="orderDate" required />
+        <label for="promoCode">Промокод</label>
+        <input type="text" id="promoCode" name="promoCode" placeholder="Введите промокод (если есть)" />
 
-      <div id="promoGroup">
-        <label for="promoCode">Промокод:</label>
-        <input type="text" id="promoCode" name="promoCode" />
-      </div>
+        <input type="submit" value="Отправить заказ" />
+        <button type="button" id="closeOrder">Закрыть</button>
+      </form>
+    </div>
 
-      <button type="submit">Отправить заказ</button>
+    <hr style="margin: 40px 0; border-color: #7c2c8d;">
+
+    <h2>Отзывы клиентов</h2>
+    <form id="reviewForm" style="max-width: 400px; margin: 0 auto;">
+      <input type="text" id="reviewName" name="reviewName" placeholder="Ваше имя" required />
+      <textarea id="reviewText" name="reviewText" rows="3" placeholder="Ваш отзыв" required></textarea>
+      <input type="submit" value="Отправить отзыв" />
     </form>
-    <button id="closeOrder">Закрыть</button>
+
+    <div id="reviewsList" class="reviews-list"></div>
   </div>
 
   <script src="scripts.js"></script>
