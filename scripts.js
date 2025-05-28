@@ -1,4 +1,4 @@
-// Объект с ценами услуг (ключ — название услуги, значение — цена в рублях)
+// Цены услуг
 const servicesPrices = {
   "Минет": 25000,
   "Фемдом": 38000,
@@ -11,19 +11,19 @@ const servicesPrices = {
   "Пеггинг": 15000,
   "Бондаж": 20000,
   "Игры с воском": 17000,
-  "Ролевая игра": 20000, // по твоему описанию 20,000$
+  "Ролевая игра (Сценарий + 4,000$)": 20000,
   "МейлДом": 22000,
   "Стриптиз / Приват-танец": 10000,
   "Совместная ванна + массаж": 25000,
   "Ночь со мной": 100000,
   "Фото-/видеосъёмка + сопровождение": 80000,
-  "VIP Клиент": 200000 // учитывая, что у тебя в HTML написано "200.000%" — тут лучше просто число
+  "VIP Клиент": 200000
 };
 
-// Объект с промокодами и скидками
+// Промокоды
 const promoCodes = {
-  "YPA": 0.95,                // 5% скидка
-  "ONYX-2025-ELITE-XR": 0.90 // 10% скидка
+  "YRA": 0.95,
+  "ONYX-2025-ELITE-XR": 0.90
 };
 
 function calculateFinalPrice() {
@@ -31,8 +31,7 @@ function calculateFinalPrice() {
   const promoCodeInput = document.getElementById('promoCode').value.trim().toUpperCase();
 
   const basePrice = servicesPrices[selectedService] || 0;
-  const discount = promoCodes[promoCodeInput] || 1; // если промокода нет — скидка 0%
-
+  const discount = promoCodes[promoCodeInput] || 1;
   const finalPrice = Math.round(basePrice * discount);
 
   let priceDisplay = document.getElementById('finalPriceDisplay');
@@ -50,54 +49,23 @@ function calculateFinalPrice() {
   return finalPrice;
 }
 
-
-// Функция пересчёта итоговой цены
-function calculateFinalPrice() {
-  const selectedService = document.getElementById('selectedService').value;
-  const promoCodeInput = document.getElementById('promoCode').value.trim().toUpperCase();
-
-  const basePrice = servicesPrices[selectedService] || 0;
-  const discount = promoCodes[promoCodeInput] || 1; // если промокода нет, скидка 1 (0%)
-
-  const finalPrice = Math.round(basePrice * discount);
-
-  // Показываем цену в форме (создаем или обновляем элемент с итоговой ценой)
-  let priceDisplay = document.getElementById('finalPriceDisplay');
-  if (!priceDisplay) {
-    priceDisplay = document.createElement('div');
-    priceDisplay.id = 'finalPriceDisplay';
-    priceDisplay.style.marginTop = '10px';
-    priceDisplay.style.fontWeight = 'bold';
-    priceDisplay.style.fontSize = '1.2em';
-    priceDisplay.style.color = '#cba0ff';
-
-    const orderForm = document.getElementById('orderForm');
-    orderForm.appendChild(priceDisplay);
-  }
-  priceDisplay.textContent = `Итоговая цена: ${finalPrice.toLocaleString('ru-RU')} руб.`;
-
-  return finalPrice;
-}
-
-// При клике на карточку услуги
+// Выбор услуги
 document.querySelectorAll('.service-card').forEach(card => {
   card.addEventListener('click', () => {
-    const serviceName = card.dataset.service;
+    const serviceName = card.querySelector('.service-name').textContent;
     document.getElementById('selectedService').value = serviceName;
     document.getElementById('selectedServiceDisplay').value = serviceName;
     document.getElementById('order').style.display = 'block';
 
-    // Переключаем видимость полей, если нужно (из твоего кода)
     toggleFieldsVisibility(serviceName);
-
     calculateFinalPrice();
   });
 });
 
-// При вводе промокода пересчитываем цену
+// При изменении промокода
 document.getElementById('promoCode').addEventListener('input', calculateFinalPrice);
 
-// Обработчик отправки формы
+// Отправка заказа
 document.getElementById('orderForm').addEventListener('submit', async e => {
   e.preventDefault();
 
@@ -122,58 +90,76 @@ document.getElementById('orderForm').addEventListener('submit', async e => {
     await fetch(webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content }),
+      body: JSON.stringify({ content })
     });
 
     alert("Ваш заказ успешно отправлен!");
     document.getElementById('orderForm').reset();
     document.getElementById('order').style.display = 'none';
 
-    // Сбрасываем отображение цены
     const priceDisplay = document.getElementById('finalPriceDisplay');
-    if (priceDisplay) priceDisplay.textContent = 'Итоговая цена: 0 руб.';
-  } catch (error) {
-    alert("Ошибка отправки заказа. Повторите позже.");
-    console.error(error);
+    if (priceDisplay) priceDisplay.textContent = '';
+  } catch (err) {
+    console.error(err);
+    alert("Ошибка при отправке. Повторите позже.");
   }
 });
 
-// Показ промокода при загрузке (из твоего кода)
+// Промо при загрузке
 window.addEventListener('load', () => {
-  const promoDeadline = new Date("2025-05-29T16:00:00");
-  if (new Date() < promoDeadline) {
-    const promo = document.getElementById("promoPopup");
-    promo.style.display = "block";
+  const deadline = new Date("2025-05-29T16:00:00");
+  const now = new Date();
+  if (now < deadline) {
+    const popup = document.getElementById('promoPopup');
+    popup.style.display = 'block';
     setTimeout(() => {
-      promo.style.display = "none";
+      popup.style.display = 'none';
     }, 10000);
   }
 });
 
-// Вкладки и другие твои обработчики
+// Вкладки
 document.querySelectorAll('.tab-link').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
-    const tabId = link.getAttribute('data-tab');
-    document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+    const tab = link.getAttribute('data-tab');
+
     document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
+    document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+
     link.classList.add('active');
+    document.getElementById(tab).classList.add('active');
   });
 });
 
+// Подвкладки
+document.querySelectorAll('.sub-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.getAttribute('data-subtab');
+
+    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('active'));
+
+    tab.classList.add('active');
+    document.getElementById(target).classList.add('active');
+  });
+});
+
+// Переключение видимости заказа
 document.getElementById('orderToggle').addEventListener('click', () => {
-  const orderPopup = document.getElementById('order');
-  orderPopup.style.display = orderPopup.style.display === 'block' ? 'none' : 'block';
+  const order = document.getElementById('order');
+  order.style.display = order.style.display === 'block' ? 'none' : 'block';
 });
 
 document.getElementById('closeOrder').addEventListener('click', () => {
   document.getElementById('order').style.display = 'none';
 });
 
+// Скрытие полей для VIP
 function toggleFieldsVisibility(serviceName) {
   const promoGroup = document.getElementById('promoGroup');
   const orderDate = document.getElementById('orderDate');
+
   if (serviceName.toLowerCase().includes('vip')) {
     promoGroup.style.display = 'none';
     orderDate.style.display = 'none';
@@ -184,14 +170,3 @@ function toggleFieldsVisibility(serviceName) {
     orderDate.setAttribute('required', 'true');
   }
 }
-
-// Переключение под-вкладок
-document.querySelectorAll('.sub-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    const target = tab.getAttribute('data-subtab');
-    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById(target).classList.add('active');
-  });
-});
