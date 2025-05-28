@@ -1,41 +1,41 @@
-/* Основные стили */
+/* Основные цвета и фон */
 body {
   background: linear-gradient(160deg, #2c0735, #541a5f, #7c2c8d);
   color: #e6d6f3;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 900px;
+  margin: 0 auto 40px;
   padding: 20px;
 }
 
 h1, h2 {
   text-align: center;
   color: #cba0ff;
-  margin-bottom: 20px;
+  user-select: none;
 }
 
-/* Навигация вкладок */
 nav {
   text-align: center;
-  margin-bottom: 30px;
+  margin: 20px 0 30px;
 }
 
 nav a {
   display: inline-block;
   background-color: #7c2c8d;
   color: white;
-  padding: 12px 25px;
+  padding: 12px 24px;
   margin: 0 8px;
-  border-radius: 12px;
+  border-radius: 30px;
   text-decoration: none;
   cursor: pointer;
   font-weight: 600;
+  letter-spacing: 0.03em;
   transition: background-color 0.3s ease;
   user-select: none;
 }
@@ -43,272 +43,103 @@ nav a {
 nav a:hover,
 nav a.active {
   background-color: #a347c7;
+  box-shadow: 0 0 8px #cda0ffcc;
 }
 
-/* Карточки вкладок */
 .card {
   background-color: #491b5f;
   border-radius: 20px;
-  padding: 28px;
-  margin-bottom: 40px;
-  box-shadow: 0 4px 25px rgba(190, 134, 255, 0.3);
+  padding: 30px 30px 25px;
+  margin: 20px 0;
+  box-shadow: 0 4px 30px rgba(190, 134, 255, 0.35);
   display: none;
-  animation: fadeIn 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .card.active {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Сетка услуг */
 .service-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 15px;
   justify-content: center;
 }
 
 .service-card {
-  flex: 0 1 calc(30% - 12px);
+  flex: 0 1 calc(30% - 15px);
   background-color: #4e1e61;
-  color: #fff;
-  padding: 20px 15px;
-  border-radius: 18px;
-  box-shadow: 0 2px 15px rgba(255, 255, 255, 0.1);
+  color: #f5e8ff;
+  padding: 18px 10px;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.12);
   cursor: pointer;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   text-align: center;
   font-size: 15px;
-  min-height: 110px;
+  font-weight: 600;
+  transition: 
+    background-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
   user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 110px;
 }
 
 .service-card:hover {
+  background-color: #7c2c8d;
   transform: scale(1.06);
-  background-color: #7c2c8d;
+  box-shadow: 0 4px 25px #cfa3ffcc;
 }
 
-.service-title {
-  font-weight: 700;
-  margin-bottom: 8px;
-  font-size: 18px;
-}
-
-.service-price {
-  color: #d7b0f2;
-  font-size: 15px;
-}
-
-/* Отзывы */
-.review-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.review-form input,
-.review-form textarea {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  resize: vertical;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-.review-form button {
-  background-color: #7c2c8d;
-  color: white;
-  padding: 12px;
-  font-weight: 700;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.review-form button:hover {
-  background-color: #a347c7;
-}
-
-.reviews-list {
-  max-height: 350px;
-  overflow-y: auto;
-}
-
-.review {
-  background-color: #3e1a4f;
-  padding: 15px 18px;
-  border-radius: 14px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.05);
-  font-size: 15px;
-}
-
-.review strong {
-  font-weight: 700;
-  color: #d7b0f2;
-}
-
-.review-date {
-  font-size: 13px;
-  color: #aaa;
-  margin-left: 8px;
-}
-
-/* Промо Popup */
+/* Промокод popup */
 .promo-popup {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #7c2c8d;
-  color: #fff;
-  padding: 14px 20px;
-  border-radius: 14px;
-  font-weight: 600;
-  box-shadow: 0 4px 20px rgba(190, 134, 255, 0.4);
-  z-index: 1000;
-  user-select: none;
-  animation: fadeInDown 0.5s ease forwards;
-}
-
-/* Окно заказа */
-.order-popup {
-  position: fixed;
-  top: 50%;
+  top: 12px;
   left: 50%;
-  width: 320px;
-  max-width: 90vw;
-  background-color: #491b5f;
-  border-radius: 20px;
-  padding: 30px 25px 25px;
-  box-shadow: 0 8px 40px rgba(190, 134, 255, 0.5);
-  transform: translate(-50%, -50%) translateY(-20px);
-  opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 1100;
-}
-
-.order-popup.show {
-  opacity: 1;
-  transform: translate(-50%, -50%) translateY(0);
-}
-
-.order-popup h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #cba0ff;
-  text-align: center;
-}
-
-.order-popup form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.order-popup label {
-  display: flex;
-  flex-direction: column;
+  transform: translateX(-50%);
+  background: #7c2c8d;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 25px;
   font-weight: 600;
-  font-size: 14px;
-  color: #e6d6f3;
+  box-shadow: 0 0 15px #cda0ffcc;
+  user-select: none;
+  z-index: 9999;
+  animation: popupFade 1s ease forwards;
 }
 
-.order-popup input[readonly] {
-  background-color: #633d90;
-  color: #d7b0f2;
-  cursor: default;
+@keyframes popupFade {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }
 
-.order-popup input,
-.order-popup select {
-  margin-top: 5px;
-  padding: 9px 12px;
-  border-radius: 10px;
-  border: none;
-  font-size: 15px;
-  font-family: 'Segoe UI', sans-serif;
+/* Кнопки */
+button, input[type="submit"] {
   background-color: #7c2c8d;
-  color: #fff;
-}
-
-.order-popup input::placeholder {
-  color: #d7b0f2;
-  opacity: 0.7;
-}
-
-.order-popup button[type="submit"] {
-  margin-top: 10px;
-  background-color: #7c2c8d;
-  color: #fff;
-  padding: 12px;
-  font-weight: 700;
-  border-radius: 14px;
   border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.order-popup button[type="submit"]:hover {
-  background-color: #a347c7;
-}
-
-/* Кнопка закрытия */
-.close-order {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 26px;
-  color: #d7b0f2;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  line-height: 1;
   user-select: none;
-  transition: color 0.3s ease;
 }
 
-.close-order:hover {
-  color: #fff;
+button:hover, input[type="submit"]:hover {
+  background-color: #a347c7;
+  box-shadow: 0 0 10px #cda0ffcc;
 }
 
-/* Анимации */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-20px);}
-  to { opacity: 1; transform: translateY(0);}
-}
-
-/* Адаптив */
-@media (max-width: 768px) {
-  .service-card {
-    flex: 1 1 calc(45% - 15px);
-  }
-}
-
-@media (max-width: 480px) {
-  nav a {
-    display: block;
-    width: 100%;
-    margin: 8px 0;
-  }
-
-  .service-card {
-    flex: 1 1 100%;
-  }
-
-  .order-popup {
-    width: 90vw;
-  }
-}
+input, textarea {
+  width: 100%;
+  padding
