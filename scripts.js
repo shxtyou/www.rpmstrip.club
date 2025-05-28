@@ -1,118 +1,187 @@
-const servicesPrices = {
-  "Минет": 25000,
-  "BDSM": 40000,
-  "VIP Клиент": 200000
-};
+// scripts.js
 
-const promoCodes = {
-  "YPA": 0.95,
-  "ONYX-2025-ELITE-XR": 0.90
-};
+document.addEventListener('DOMContentLoaded', () => {
+  // --- Навигация по вкладкам ---
+  const tabLinks = document.querySelectorAll('nav a.tab-link');
+  const cards = document.querySelectorAll('.card');
 
-function calculateFinalPrice() {
-  const selectedService = document.getElementById('selectedService').value;
-  const promoCodeInput = document.getElementById('promoCode').value.trim().toUpperCase();
-  const basePrice = servicesPrices[selectedService] || 0;
-  const discount = promoCodes[promoCodeInput] || 1;
-  const finalPrice = Math.round(basePrice * discount);
+  tabLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
 
-  let priceDisplay = document.getElementById('finalPriceDisplay');
-  if (!priceDisplay) {
-    priceDisplay = document.createElement('div');
-    priceDisplay.id = 'finalPriceDisplay';
-    priceDisplay.style.marginTop = '10px';
-    priceDisplay.style.fontWeight = 'bold';
-    priceDisplay.style.fontSize = '1.2em';
-    priceDisplay.style.color = '#cba0ff';
-    document.getElementById('orderForm').appendChild(priceDisplay);
-  }
-  priceDisplay.textContent = `Итоговая цена: ${finalPrice.toLocaleString('ru-RU')} руб.`;
-  return finalPrice;
-}
+      // Убираем активность у всех вкладок и карточек
+      tabLinks.forEach(l => l.classList.remove('active'));
+      cards.forEach(c => c.classList.remove('active'));
 
-document.querySelectorAll('.service-card').forEach(card => {
-  card.addEventListener('click', () => {
-    const serviceName = card.dataset.service;
-    document.getElementById('selectedService').value = serviceName;
-    document.getElementById('selectedServiceDisplay').value = serviceName;
-    document.getElementById('order').style.display = 'block';
-    toggleFieldsVisibility(serviceName);
-    calculateFinalPrice();
-  });
-});
-
-document.getElementById('promoCode').addEventListener('input', calculateFinalPrice);
-
-document.getElementById('orderForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const webhookUrl = 'https://discord.com/api/webhooks/your-webhook';
-  const discordNick = document.getElementById('discordNick').value.trim();
-  const rpmNick = document.getElementById('rpmNick').value.trim();
-  const selectedService = document.getElementById('selectedService').value;
-  const orderDate = document.getElementById('orderDate').value;
-  const promoCode = document.getElementById('promoCode').value.trim().toUpperCase();
-  const finalPrice = calculateFinalPrice();
-
-  const content = `📝 **Новый заказ**\n**Discord:** ${discordNick}\n**РПМ Ник:** ${rpmNick}\n**Услуга:** ${selectedService}\n${orderDate ? `**Дата:** ${orderDate}\n` : ''}${promoCode ? `**Промокод:** ${promoCode}\n` : ''}**Итоговая цена:** ${finalPrice.toLocaleString('ru-RU')} руб.`;
-
-  try {
-    await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content })
+      // Добавляем активность к кликнутой вкладке и соответствующей карточке
+      link.classList.add('active');
+      const targetId = link.getAttribute('data-tab');
+      const targetCard = document.getElementById(targetId);
+      if (targetCard) targetCard.classList.add('active');
     });
-    alert("Ваш заказ успешно отправлен!");
-    document.getElementById('orderForm').reset();
-    document.getElementById('order').style.display = 'none';
-    const priceDisplay = document.getElementById('finalPriceDisplay');
-    if (priceDisplay) priceDisplay.textContent = 'Итоговая цена: 0 руб.';
-  } catch (error) {
-    alert("Ошибка отправки заказа. Повторите позже.");
-    console.error(error);
-  }
-});
-
-window.addEventListener('load', () => {
-  const promoDeadline = new Date("2025-05-29T16:00:00");
-  if (new Date() < promoDeadline) {
-    const promo = document.getElementById("promoPopup");
-    promo.style.display = "block";
-    setTimeout(() => {
-      promo.style.display = "none";
-    }, 10000);
-  }
-});
-
-document.querySelectorAll('.tab-link').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const tabId = link.getAttribute('data-tab');
-    document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
-    document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(tabId).classList.add('active');
-    link.classList.add('active');
   });
-});
 
-document.getElementById('orderToggle').addEventListener('click', () => {
-  const orderPopup = document.getElementById('order');
-  orderPopup.style.display = orderPopup.style.display === 'block' ? 'none' : 'block';
-});
-
-document.getElementById('closeOrder').addEventListener('click', () => {
-  document.getElementById('order').style.display = 'none';
-});
-
-function toggleFieldsVisibility(serviceName) {
-  const promoGroup = document.getElementById('promoGroup');
-  const orderDate = document.getElementById('orderDate');
-  if (serviceName.toLowerCase().includes('vip')) {
-    promoGroup.style.display = 'none';
-    orderDate.style.display = 'none';
-    orderDate.removeAttribute('required');
-  } else {
-    promoGroup.style.display = 'block';
-    orderDate.style.display = 'block';
-    orderDate.setAttribute('required', 'true');
+  // --- Промокод popup при загрузке ---
+  const promoPopup = document.getElementById('promoPopup');
+  if (promoPopup) {
+    promoPopup.style.display = 'block';
+    setTimeout(() => {
+      promoPopup.style.opacity = '0';
+      setTimeout(() => promoPopup.style.display = 'none', 1000);
+    }, 7000);
   }
-}
+
+  // --- Карточки услуг: выбор ---
+  const serviceCards = document.querySelectorAll('.service-card');
+  const orderPopup = document.getElementById('order');
+  const orderToggle = document.getElementById('orderToggle');
+  const closeOrderBtn = document.getElementById('closeOrder');
+  const selectedServiceInput = document.getElementById('selectedService');
+  const selectedServiceDisplay = document.getElementById('selectedServiceDisplay');
+
+  let currentSelectedService = null;
+
+  serviceCards.forEach(card => {
+    card.addEventListener('click', () => {
+      // Подсветка выбранной услуги
+      serviceCards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+
+      currentSelectedService = card.getAttribute('data-service');
+      selectedServiceInput.value = currentSelectedService;
+      selectedServiceDisplay.value = currentSelectedService;
+
+      // Автоматически открыть форму заказа при выборе услуги
+      showOrderPopup();
+    });
+  });
+
+  // --- Открытие и закрытие формы заказа ---
+  function showOrderPopup() {
+    if (!orderPopup) return;
+    orderPopup.style.display = 'block';
+    setTimeout(() => {
+      orderPopup.style.opacity = '1';
+      orderPopup.style.transform = 'translateY(0)';
+    }, 10);
+  }
+
+  function hideOrderPopup() {
+    if (!orderPopup) return;
+    orderPopup.style.opacity = '0';
+    orderPopup.style.transform = 'translateY(-20px)';
+    setTimeout(() => {
+      orderPopup.style.display = 'none';
+    }, 300);
+  }
+
+  if (orderToggle) {
+    orderToggle.addEventListener('click', () => {
+      if (orderPopup.style.display === 'block') {
+        hideOrderPopup();
+      } else {
+        showOrderPopup();
+      }
+    });
+  }
+
+  if (closeOrderBtn) {
+    closeOrderBtn.addEventListener('click', () => {
+      hideOrderPopup();
+    });
+  }
+
+  // --- Обработка формы заказа ---
+  const orderForm = document.getElementById('orderForm');
+  orderForm?.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // Проверка на выбранную услугу
+    if (!selectedServiceInput.value) {
+      alert('Пожалуйста, выберите услугу из списка.');
+      return;
+    }
+
+    const discordNick = orderForm.discordNick.value.trim();
+    const rpmNick = orderForm.rpmNick.value.trim();
+    const orderDate = orderForm.orderDate.value;
+    const promoCode = orderForm.promoCode.value.trim();
+
+    if (!discordNick || !rpmNick || !orderDate) {
+      alert('Пожалуйста, заполните все обязательные поля.');
+      return;
+    }
+
+    // Проверка промокода
+    let discount = 0;
+    if (promoCode.toUpperCase() === 'YRA') {
+      discount = 5; // 5% скидка
+    }
+
+    // Здесь можно реализовать отправку данных на сервер, пока просто выводим в alert
+    let message = `Заказ оформлен!\n\nУслуга: ${selectedServiceInput.value}\nDiscord: ${discordNick}\nRPM Ник: ${rpmNick}\nДата: ${orderDate}`;
+    if (discount > 0) message += `\nПромокод: ${promoCode} (скидка ${discount}%)`;
+
+    alert(message);
+
+    // Сброс формы и закрытие
+    orderForm.reset();
+    selectedServiceInput.value = '';
+    selectedServiceDisplay.value = '';
+    serviceCards.forEach(c => c.classList.remove('selected'));
+    hideOrderPopup();
+  });
+
+  // --- Форма отзывов ---
+  const reviewForm = document.getElementById('reviewForm');
+  const reviewsList = document.getElementById('reviewsList');
+
+  // Загрузка отзывов из localStorage
+  function loadReviews() {
+    const reviews = JSON.parse(localStorage.getItem('rpmReviews') || '[]');
+    reviewsList.innerHTML = '';
+    reviews.forEach(({ name, text, date }) => {
+      const reviewDiv = document.createElement('div');
+      reviewDiv.classList.add('review');
+
+      const dateFormatted = new Date(date).toLocaleString('ru-RU', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      reviewDiv.innerHTML = `
+        <strong>${name}</strong> <span class="review-date">${dateFormatted}</span>
+        <p>${text}</p>
+      `;
+
+      reviewsList.appendChild(reviewDiv);
+    });
+  }
+
+  reviewForm?.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = reviewForm.reviewName.value.trim();
+    const text = reviewForm.reviewText.value.trim();
+
+    if (!name || !text) {
+      alert('Пожалуйста, заполните имя и текст отзыва.');
+      return;
+    }
+
+    const reviews = JSON.parse(localStorage.getItem('rpmReviews') || '[]');
+    reviews.unshift({
+      name,
+      text,
+      date: new Date().toISOString()
+    });
+
+    localStorage.setItem('rpmReviews', JSON.stringify(reviews));
+    loadReviews();
+
+    reviewForm.reset();
+    alert('Спасибо за отзыв!');
+  });
+
+  // Инициализация отзывов при загрузке
+  loadReviews();
+});
