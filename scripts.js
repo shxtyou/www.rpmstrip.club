@@ -1,3 +1,79 @@
+// Объект с ценами услуг (ключ — название услуги, значение — цена в рублях)
+const servicesPrices = {
+  "Минет": 25000,
+  "Фемдом": 38000,
+  "Подчинение": 80000,
+  "Шибари": 20000,
+  "BDSM": 40000,
+  "Фут Джоб": 20000,
+  "Тит Джоб": 20000,
+  "Спанкинг": 15000,
+  "Пеггинг": 15000,
+  "Бондаж": 20000,
+  "Игры с воском": 17000,
+  "Ролевая игра": 20000, // по твоему описанию 20,000$
+  "МейлДом": 22000,
+  "Стриптиз / Приват-танец": 10000,
+  "Совместная ванна + массаж": 25000,
+  "Ночь со мной": 100000,
+  "Фото-/видеосъёмка + сопровождение": 80000,
+  "VIP Клиент": 200000 // учитывая, что у тебя в HTML написано "200.000%" — тут лучше просто число
+};
+
+// Объект с промокодами и скидками (10% = 0.9, 20% = 0.8 и т.п.)
+const promoCodes = {
+  "YRA": 0.95,          // 5% скидка
+  "DISCOUNT10": 0.9,
+  "SALE20": 0.8
+};
+
+// Функция пересчёта итоговой цены
+function calculateFinalPrice() {
+  const selectedService = document.getElementById('selectedService').value;
+  const promoCodeInput = document.getElementById('promoCode').value.trim().toUpperCase();
+
+  const basePrice = servicesPrices[selectedService] || 0;
+  const discount = promoCodes[promoCodeInput] || 1; // если промокода нет, скидка 1 (0%)
+
+  const finalPrice = Math.round(basePrice * discount);
+
+  // Показываем цену в форме (создаем или обновляем элемент с итоговой ценой)
+  let priceDisplay = document.getElementById('finalPriceDisplay');
+  if (!priceDisplay) {
+    priceDisplay = document.createElement('div');
+    priceDisplay.id = 'finalPriceDisplay';
+    priceDisplay.style.marginTop = '10px';
+    priceDisplay.style.fontWeight = 'bold';
+    priceDisplay.style.fontSize = '1.2em';
+    priceDisplay.style.color = '#cba0ff';
+
+    const orderForm = document.getElementById('orderForm');
+    orderForm.appendChild(priceDisplay);
+  }
+  priceDisplay.textContent = `Итоговая цена: ${finalPrice.toLocaleString('ru-RU')} руб.`;
+
+  return finalPrice;
+}
+
+// При клике на карточку услуги
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const serviceName = card.dataset.service;
+    document.getElementById('selectedService').value = serviceName;
+    document.getElementById('selectedServiceDisplay').value = serviceName;
+    document.getElementById('order').style.display = 'block';
+
+    // Переключаем видимость полей, если нужно (из твоего кода)
+    toggleFieldsVisibility(serviceName);
+
+    calculateFinalPrice();
+  });
+});
+
+// При вводе промокода пересчитываем цену
+document.getElementById('promoCode').addEventListener('input', calculateFinalPrice);
+
+// Обработчик отправки формы
 document.getElementById('orderForm').addEventListener('submit', async e => {
   e.preventDefault();
 
@@ -7,14 +83,16 @@ document.getElementById('orderForm').addEventListener('submit', async e => {
   const rpmNick = document.getElementById('rpmNick').value.trim();
   const selectedService = document.getElementById('selectedService').value;
   const orderDate = document.getElementById('orderDate').value;
-  const promoCode = document.getElementById('promoCode').value.trim();
+  const promoCode = document.getElementById('promoCode').value.trim().toUpperCase();
+  const finalPrice = calculateFinalPrice();
 
   const content = `📝 **Новый заказ**\n` +
     `**Discord:** ${discordNick}\n` +
     `**РПМ Ник:** ${rpmNick}\n` +
     `**Услуга:** ${selectedService}\n` +
     (orderDate ? `**Дата:** ${orderDate}\n` : ``) +
-    (promoCode ? `**Промокод:** ${promoCode}` : ``);
+    (promoCode ? `**Промокод:** ${promoCode}\n` : ``) +
+    `**Итоговая цена:** ${finalPrice.toLocaleString('ru-RU')} руб.`;
 
   try {
     await fetch(webhookUrl, {
@@ -26,13 +104,17 @@ document.getElementById('orderForm').addEventListener('submit', async e => {
     alert("Ваш заказ успешно отправлен!");
     document.getElementById('orderForm').reset();
     document.getElementById('order').style.display = 'none';
+
+    // Сбрасываем отображение цены
+    const priceDisplay = document.getElementById('finalPriceDisplay');
+    if (priceDisplay) priceDisplay.textContent = 'Итоговая цена: 0 руб.';
   } catch (error) {
     alert("Ошибка отправки заказа. Повторите позже.");
     console.error(error);
   }
 });
 
-// Показ промокода при загрузке
+// Показ промокода при загрузке (из твоего кода)
 window.addEventListener('load', () => {
   const promoDeadline = new Date("2025-05-29T16:00:00");
   if (new Date() < promoDeadline) {
@@ -44,7 +126,7 @@ window.addEventListener('load', () => {
   }
 });
 
-// Вкладки
+// Вкладки и другие твои обработчики
 document.querySelectorAll('.tab-link').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -56,7 +138,6 @@ document.querySelectorAll('.tab-link').forEach(link => {
   });
 });
 
-// Открытие и закрытие окна заказа
 document.getElementById('orderToggle').addEventListener('click', () => {
   const orderPopup = document.getElementById('order');
   orderPopup.style.display = orderPopup.style.display === 'block' ? 'none' : 'block';
@@ -64,17 +145,6 @@ document.getElementById('orderToggle').addEventListener('click', () => {
 
 document.getElementById('closeOrder').addEventListener('click', () => {
   document.getElementById('order').style.display = 'none';
-});
-
-// Открытие формы при клике на карточку
-document.querySelectorAll('.service-card').forEach(card => {
-  card.addEventListener('click', () => {
-    const selectedService = card.dataset.service;
-    document.getElementById('selectedService').value = selectedService;
-    document.getElementById('selectedServiceDisplay').value = selectedService;
-    document.getElementById('order').style.display = 'block';
-    toggleFieldsVisibility(selectedService);
-  });
 });
 
 function toggleFieldsVisibility(serviceName) {
