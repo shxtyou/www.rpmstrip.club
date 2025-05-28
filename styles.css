@@ -186,4 +186,55 @@ nav a.active {
   .service-card {
     flex: 1 1 100%;
   }
+/* Анимации появления */
+.card, .sub-card {
+  animation: fadeIn 0.4s ease;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Вкладки под прайс */
+.sub-tabs {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.sub-tab {
+  background: #7c2c8d;
+  color: white;
+  padding: 8px 16px;
+  margin: 0 5px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+  font-size: 16px;
+}
+
+.sub-tab:hover,
+.sub-tab.active {
+  background: #a347c7;
+}
+
+.sub-card {
+  display: none;
+}
+
+.sub-card.active {
+  display: block;
+}
+
+/* Квадратные карточки услуг */
+.service-card {
+  flex: 1 1 calc(33.333% - 10px);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+}
+
