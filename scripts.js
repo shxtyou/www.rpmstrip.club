@@ -1,5 +1,3 @@
-// scripts.js
-
 document.addEventListener('DOMContentLoaded', () => {
   // --- Навигация по вкладкам ---
   const tabLinks = document.querySelectorAll('nav a.tab-link');
@@ -9,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', e => {
       e.preventDefault();
 
-      // Убираем активность у всех вкладок и карточек
+      // Снимаем активность со всех вкладок и карточек
       tabLinks.forEach(l => l.classList.remove('active'));
       cards.forEach(c => c.classList.remove('active'));
 
-      // Добавляем активность к кликнутой вкладке и соответствующей карточке
+      // Активируем выбранную вкладку и карточку
       link.classList.add('active');
       const targetId = link.getAttribute('data-tab');
       const targetCard = document.getElementById(targetId);
@@ -25,9 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const promoPopup = document.getElementById('promoPopup');
   if (promoPopup) {
     promoPopup.style.display = 'block';
+    promoPopup.style.opacity = '1';
+
     setTimeout(() => {
       promoPopup.style.opacity = '0';
-      setTimeout(() => promoPopup.style.display = 'none', 1000);
+      setTimeout(() => {
+        promoPopup.style.display = 'none';
+      }, 1000);
     }, 7000);
   }
 
@@ -62,14 +64,16 @@ document.addEventListener('DOMContentLoaded', () => {
     orderPopup.style.display = 'block';
     setTimeout(() => {
       orderPopup.style.opacity = '1';
-      orderPopup.style.transform = 'translateY(0)';
+      orderPopup.style.transform = 'translate(-50%, 0)';
+      orderPopup.setAttribute('aria-hidden', 'false');
     }, 10);
   }
 
   function hideOrderPopup() {
     if (!orderPopup) return;
     orderPopup.style.opacity = '0';
-    orderPopup.style.transform = 'translateY(-20px)';
+    orderPopup.style.transform = 'translate(-50%, -20px)';
+    orderPopup.setAttribute('aria-hidden', 'true');
     setTimeout(() => {
       orderPopup.style.display = 'none';
     }, 300);
@@ -96,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
   orderForm?.addEventListener('submit', e => {
     e.preventDefault();
 
-    // Проверка на выбранную услугу
     if (!selectedServiceInput.value) {
       alert('Пожалуйста, выберите услугу из списка.');
       return;
@@ -112,13 +115,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Проверка промокода
     let discount = 0;
     if (promoCode.toUpperCase() === 'YRA') {
       discount = 5; // 5% скидка
     }
 
-    // Здесь можно реализовать отправку данных на сервер, пока просто выводим в alert
     let message = `Заказ оформлен!\n\nУслуга: ${selectedServiceInput.value}\nDiscord: ${discordNick}\nRPM Ник: ${rpmNick}\nДата: ${orderDate}`;
     if (discount > 0) message += `\nПромокод: ${promoCode} (скидка ${discount}%)`;
 
@@ -136,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const reviewForm = document.getElementById('reviewForm');
   const reviewsList = document.getElementById('reviewsList');
 
-  // Загрузка отзывов из localStorage
   function loadReviews() {
     const reviews = JSON.parse(localStorage.getItem('rpmReviews') || '[]');
     reviewsList.innerHTML = '';
@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   reviewForm?.addEventListener('submit', e => {
     e.preventDefault();
+
     const name = reviewForm.reviewName.value.trim();
     const text = reviewForm.reviewText.value.trim();
 
@@ -182,6 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
     alert('Спасибо за отзыв!');
   });
 
-  // Инициализация отзывов при загрузке
+  // Загрузка отзывов при старте
   loadReviews();
 });
