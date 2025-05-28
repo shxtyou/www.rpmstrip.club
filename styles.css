@@ -160,12 +160,11 @@ input, textarea {
   box-sizing: border-box;
 }
 
-/* Заказ popup */
 .order-popup {
   position: fixed;
-  top: 50%;
+  top: 35%;
   left: 50%;
-  transform: translate(-50%, -20px);
+  transform: translate(-50%, -10%);
   background-color: #4e1e61;
   color: #fff;
   padding: 25px 30px;
