@@ -150,19 +150,16 @@ nav a.active {
 }
 
 .service-card {
-  flex: 1 1 calc(25% - 10px);
-  font-size: 14px;
-  padding: 12px;
   background-color: #491b5f;
-  border: 2px solid #cba0ff; /* тонкая обводка */
-  border-radius: 15px;
+  border-radius: 20px;
+  padding: 12px;
+  margin: 10px 0;
+  box-shadow: 0 4px 25px rgba(190, 134, 255, 0.3);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 180px; /* фиксированная высота для квадратного вида */
-  box-sizing: border-box;
-  transition: background-color 0.3s, transform 0.3s;
   cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .service-card:hover {
@@ -170,15 +167,19 @@ nav a.active {
   transform: scale(1.05);
 }
 
-.service-card .service-name {
+.service-name {
   font-weight: 700;
-  font-size: 1.1em;
+  font-size: 18px;
+  margin-bottom: 8px;
   color: #e6d6f3;
 }
 
-.service-card .service-price {
-  font-size: 1em;
-  color: #d7b0f2;
+.service-price {
+  font-weight: 600;
+  font-size: 16px;
+  color: #cba0ff;
+  border-top: 1px solid #a347c7;
+  padding-top: 8px;
   text-align: right;
 }
 
