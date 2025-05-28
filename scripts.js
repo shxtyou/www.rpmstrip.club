@@ -10,7 +10,7 @@ window.addEventListener('load', () => {
   }
 });
 
-// Вкладки
+// Вкладки сайта (Описание / Прайс / VIP)
 document.querySelectorAll('.tab-link').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -24,7 +24,20 @@ document.querySelectorAll('.tab-link').forEach(link => {
   });
 });
 
-// Открытие и закрытие окна заказа
+// Внутренние саб-вкладки в прайсе (Интимные / Дополнительные)
+document.querySelectorAll('.subtab-button').forEach(button => {
+  button.addEventListener('click', () => {
+    const target = button.dataset.target;
+
+    document.querySelectorAll('.subtab-button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.subtab-content').forEach(content => content.classList.remove('active'));
+
+    button.classList.add('active');
+    document.getElementById(target).classList.add('active');
+  });
+});
+
+// Открытие и закрытие формы заказа
 const orderToggle = document.getElementById('orderToggle');
 const orderPopup = document.getElementById('order');
 const closeOrderBtn = document.getElementById('closeOrder');
@@ -37,7 +50,7 @@ closeOrderBtn.addEventListener('click', () => {
   orderPopup.style.display = 'none';
 });
 
-// Открытие формы при клике на карточку
+// Выбор услуги по клику на карточку
 document.querySelectorAll('.service-card').forEach(card => {
   card.addEventListener('click', () => {
     const selectedService = card.dataset.service;
@@ -64,7 +77,7 @@ function toggleFieldsVisibility(serviceName) {
   }
 }
 
-// Отправка формы на Discord webhook
+// Отправка формы в Discord
 const form = document.getElementById('orderForm');
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
