@@ -6,12 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   tabLinks.forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
-
-      // Снимаем активность со всех вкладок и карточек
       tabLinks.forEach(l => l.classList.remove('active'));
       cards.forEach(c => c.classList.remove('active'));
 
-      // Активируем выбранную вкладку и карточку
       link.classList.add('active');
       const targetId = link.getAttribute('data-tab');
       const targetCard = document.getElementById(targetId);
@@ -23,13 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const promoPopup = document.getElementById('promoPopup');
   if (promoPopup) {
     promoPopup.style.display = 'block';
-    promoPopup.style.opacity = '1';
-
     setTimeout(() => {
       promoPopup.style.opacity = '0';
-      setTimeout(() => {
-        promoPopup.style.display = 'none';
-      }, 1000);
+      setTimeout(() => promoPopup.style.display = 'none', 1000);
     }, 7000);
   }
 
@@ -45,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   serviceCards.forEach(card => {
     card.addEventListener('click', () => {
-      // Подсветка выбранной услуги
       serviceCards.forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
 
@@ -53,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedServiceInput.value = currentSelectedService;
       selectedServiceDisplay.value = currentSelectedService;
 
-      // Автоматически открыть форму заказа при выборе услуги
       showOrderPopup();
     });
   });
@@ -64,16 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
     orderPopup.style.display = 'block';
     setTimeout(() => {
       orderPopup.style.opacity = '1';
-      orderPopup.style.transform = 'translate(-50%, 0)';
-      orderPopup.setAttribute('aria-hidden', 'false');
+      orderPopup.style.transform = 'translate(-50%, -10%)';
     }, 10);
   }
 
   function hideOrderPopup() {
     if (!orderPopup) return;
     orderPopup.style.opacity = '0';
-    orderPopup.style.transform = 'translate(-50%, -20px)';
-    orderPopup.setAttribute('aria-hidden', 'true');
+    orderPopup.style.transform = 'translate(-50%, -20%)';
     setTimeout(() => {
       orderPopup.style.display = 'none';
     }, 300);
@@ -116,16 +105,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let discount = 0;
-    if (promoCode.toUpperCase() === 'YRA') {
-      discount = 5; // 5% скидка
-    }
+    if (promoCode.toUpperCase() === 'YRA') discount = 5;
 
-    let message = `Заказ оформлен!\n\nУслуга: ${selectedServiceInput.value}\nDiscord: ${discordNick}\nRPM Ник: ${rpmNick}\nДата: ${orderDate}`;
-    if (discount > 0) message += `\nПромокод: ${promoCode} (скидка ${discount}%)`;
+    const message = `**Новый заказ:**\n\n**Услуга:** ${selectedServiceInput.value}\n**Discord:** ${discordNick}\n**RPM Ник:** ${rpmNick}\n**Дата:** ${orderDate}${discount > 0 ? `\n**Промокод:** ${promoCode} (скидка ${discount}%)` : ''}`;
 
-    alert(message);
+    // Отправка на Discord Webhook
+    fetch('https://discord.com/api/webhooks/1377402877525627000/SP6c2slJtULdU-Ejd1tuRlY8HvEeCk_Q72UbfFMOw1FGuEJIoxhWCcoON4tmuxAQpGfO', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: message })
+    }).then(() => {
+      alert('Заказ оформлен!');
+    }).catch(err => {
+      alert('Ошибка при отправке в Discord: ' + err.message);
+    });
 
-    // Сброс формы и закрытие
     orderForm.reset();
     selectedServiceInput.value = '';
     selectedServiceDisplay.value = '';
@@ -133,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     hideOrderPopup();
   });
 
-  // --- Форма отзывов ---
+  // --- Обработка отзывов ---
   const reviewForm = document.getElementById('reviewForm');
   const reviewsList = document.getElementById('reviewsList');
 
@@ -160,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   reviewForm?.addEventListener('submit', e => {
     e.preventDefault();
-
     const name = reviewForm.reviewName.value.trim();
     const text = reviewForm.reviewText.value.trim();
 
@@ -169,20 +162,28 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const reviews = JSON.parse(localStorage.getItem('rpmReviews') || '[]');
-    reviews.unshift({
+    const review = {
       name,
       text,
       date: new Date().toISOString()
-    });
+    };
 
+    const reviews = JSON.parse(localStorage.getItem('rpmReviews') || '[]');
+    reviews.unshift(review);
     localStorage.setItem('rpmReviews', JSON.stringify(reviews));
     loadReviews();
+
+    // Отправка отзыва в Discord
+    const reviewMessage = `**Новый отзыв:**\n\n**Имя:** ${name}\n**Текст:** ${text}`;
+    fetch('https://discord.com/api/webhooks/1377403125828157460/a54wbvTLMZ9ihxRUmFQNM3AYBxHsvtUcF9bKg20d9IZ39AYx4sGB_C2miQBtvnL_LC2u', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: reviewMessage })
+    });
 
     reviewForm.reset();
     alert('Спасибо за отзыв!');
   });
 
-  // Загрузка отзывов при старте
   loadReviews();
 });
