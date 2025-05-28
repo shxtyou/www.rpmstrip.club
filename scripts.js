@@ -1,3 +1,36 @@
+document.getElementById('orderForm').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const webhookUrl = 'https://discord.com/api/webhooks/1377196690099933279/o4XKVX179xTD6IV9FIG-kRg9w_t8XDlBG_xewTh2uRVLJfxvgzUpJtS6rFwOw5eXSID1';
+
+  const discordNick = document.getElementById('discordNick').value.trim();
+  const rpmNick = document.getElementById('rpmNick').value.trim();
+  const selectedService = document.getElementById('selectedService').value;
+  const orderDate = document.getElementById('orderDate').value;
+  const promoCode = document.getElementById('promoCode').value.trim();
+
+  const content = `📝 **Новый заказ**\n` +
+    `**Discord:** ${discordNick}\n` +
+    `**РПМ Ник:** ${rpmNick}\n` +
+    `**Услуга:** ${selectedService}\n` +
+    (orderDate ? `**Дата:** ${orderDate}\n` : ``) +
+    (promoCode ? `**Промокод:** ${promoCode}` : ``);
+
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
+
+    alert("Ваш заказ успешно отправлен!");
+    document.getElementById('orderForm').reset();
+    document.getElementById('order').style.display = 'none';
+  } catch (error) {
+    alert("Ошибка отправки заказа. Повторите позже.");
+    console.error(error);
+  }
+});
 
 // Показ промокода при загрузке
 window.addEventListener('load', () => {
