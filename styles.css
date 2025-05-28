@@ -150,42 +150,41 @@ nav a.active {
 }
 
 .service-card {
-  background-color: #491b5f;
-  border-radius: 20px;
-  padding: 12px;
-  margin: 10px 0;
-  box-shadow: 0 4px 25px rgba(190, 134, 255, 0.3);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px 12px; /* уменьшили отступы */
+  margin: 6px 8px; /* уменьшили внешние отступы */
+  width: 140px; /* можно подкорректировать ширину, чтобы карточки не были слишком широкими */
+  box-sizing: border-box;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
+  height: 70px; /* уменьшили высоту карточки */
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+  transition: box-shadow 0.2s ease;
 }
 
 .service-card:hover {
-  background-color: #7c2c8d;
-  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .service-name {
-  font-weight: 700;
-  font-size: 18px;
-  margin-bottom: 8px;
-  color: #e6d6f3;
+  font-size: 14px; /* уменьшенный размер шрифта */
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .service-price {
-  font-weight: 600;
-  font-size: 16px;
-  color: #cba0ff;
-  border-top: 1px solid #a347c7;
-  padding-top: 8px;
+  font-size: 13px; /* чуть меньше */
+  font-weight: 500;
+  color: #444;
   text-align: right;
-}
-
-.service-card:hover {
-  transform: scale(1.02);
-  background-color: #7c2c8d;
 }
 
 @media (max-width: 600px) {
