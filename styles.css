@@ -69,27 +69,27 @@ nav {
   display: block;
 }
 
-.service-grid {
+.services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-top: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 16px;
 }
 
 .service-card {
-  background-color: #222;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
   color: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-  transition: transform 0.2s ease;
   cursor: pointer;
-  border: 1px solid #444;
+  transition: 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.2);
 }
 
 .service-card:hover {
-  transform: scale(1.03);
-  background-color: #2d2d2d;
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(203, 160, 255, 0.6);
 }
 
 .service-name {
