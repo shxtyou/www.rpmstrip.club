@@ -20,10 +20,36 @@ const servicesPrices = {
   "VIP Клиент": 200000 // учитывая, что у тебя в HTML написано "200.000%" — тут лучше просто число
 };
 
-// Объект с промокодами и скидками 
+// Объект с промокодами и скидками
 const promoCodes = {
-  "YPA": 0.95,          // 5% скидка
+  "YPA": 0.95,                // 5% скидка
+  "ONYX-2025-ELITE-XR": 0.90 // 10% скидка
 };
+
+function calculateFinalPrice() {
+  const selectedService = document.getElementById('selectedService').value;
+  const promoCodeInput = document.getElementById('promoCode').value.trim().toUpperCase();
+
+  const basePrice = servicesPrices[selectedService] || 0;
+  const discount = promoCodes[promoCodeInput] || 1; // если промокода нет — скидка 0%
+
+  const finalPrice = Math.round(basePrice * discount);
+
+  let priceDisplay = document.getElementById('finalPriceDisplay');
+  if (!priceDisplay) {
+    priceDisplay = document.createElement('div');
+    priceDisplay.id = 'finalPriceDisplay';
+    priceDisplay.style.marginTop = '10px';
+    priceDisplay.style.fontWeight = 'bold';
+    priceDisplay.style.fontSize = '1.2em';
+    priceDisplay.style.color = '#cba0ff';
+    document.getElementById('orderForm').appendChild(priceDisplay);
+  }
+  priceDisplay.textContent = `Итоговая цена: ${finalPrice.toLocaleString('ru-RU')} руб.`;
+
+  return finalPrice;
+}
+
 
 // Функция пересчёта итоговой цены
 function calculateFinalPrice() {
