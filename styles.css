@@ -186,6 +186,8 @@ nav a.active {
   .service-card {
     flex: 1 1 100%;
   }
+}
+
 /* Анимации появления */
 .card, .sub-card {
   animation: fadeIn 0.4s ease;
@@ -237,4 +239,3 @@ nav a.active {
   text-align: center;
   font-weight: bold;
 }
-
