@@ -106,3 +106,15 @@ form.addEventListener('submit', async (e) => {
     alert('Ошибка при отправке заказа. Проверьте подключение к интернету.');
   }
 });
+// Переключение под-вкладок в прайсе
+document.querySelectorAll('.sub-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.getAttribute('data-subtab');
+
+    document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.sub-card').forEach(c => c.classList.remove('active'));
+
+    tab.classList.add('active');
+    document.getElementById(target).classList.add('active');
+  });
+});
