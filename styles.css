@@ -1,0 +1,154 @@
+body {
+  background: linear-gradient(160deg, #1e0624, #39114d);
+  color: #e6d6f3;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #cba0ff;
+}
+
+nav {
+  text-align: center;
+  margin: 20px 0;
+}
+
+nav a {
+  display: inline-block;
+  background-color: #65228f;
+  color: white;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+nav a:hover, nav a.active {
+  background-color: #8030b8;
+}
+
+.card {
+  background-color: #3a154a;
+  border-radius: 20px;
+  padding: 24px;
+  margin: 20px 0;
+  box-shadow: 0 4px 25px rgba(190, 134, 255, 0.3);
+  display: none;
+}
+
+.card.active {
+  display: block;
+}
+
+.promo-popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #65228f;
+  padding: 15px 25px;
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  z-index: 9999;
+}
+
+.order-icon {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.order-popup {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  width: 320px;
+  background-color: #3a154a;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 25px rgba(190, 134, 255, 0.6);
+  color: #e6d6f3;
+  z-index: 1001;
+  display: none;
+}
+
+.order-popup form {
+  display: flex;
+  flex-direction: column;
+}
+
+.order-popup label {
+  margin-top: 12px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.order-popup input,
+.order-popup select {
+  background-color: #65228f;
+  border-radius: 10px;
+  padding: 10px;
+  border: none;
+  color: white;
+  font-size: 16px;
+}
+
+.order-popup button[type="submit"] {
+  margin-top: 20px;
+  background-color: #65228f;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.order-popup button[type="submit"]:hover {
+  background-color: #8030b8;
+}
+
+.order-popup button#closeOrder {
+  margin-top: 10px;
+  background: transparent;
+  color: #cba0ff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  nav a {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .order-popup {
+    width: 90%;
+    right: 5%;
+    bottom: 80px;
+  }
+}
