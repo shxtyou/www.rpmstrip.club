@@ -1,4 +1,3 @@
-// --- При загрузке страницы ---
 window.addEventListener('load', () => {
   // Показываем промокод до 29 мая 2025 16:00
   const promoDeadline = new Date("2025-05-29T16:00:00");
