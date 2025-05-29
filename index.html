@@ -39,24 +39,7 @@
         <button class="person-tab active" data-person="briz">Бриз</button>
         <button class="person-tab" data-person="lisa">Лиса</button>
       </div>
-
-      <div id="briz" class="service-list active">
-        <h3>💋 Интимные услуги (Бриз)</h3>
-        <ul>
-          <li title="25,000$">Минет — 25,000$</li>
-          <li title="38,000$">Фемдом — 38,000$</li>
-          <li title="100,000$">Ночь со мной — 100,000$</li>
-        </ul>
-      </div>
-
-      <div id="lisa" class="service-list">
-        <h3>💋 Интимные услуги (Лиса)</h3>
-        <ul>
-          <li title="25,000$">Минет — 25,000$</li>
-          <li title="80,000$">Подчинение — 80,000$</li>
-          <li title="40,000$">BDSM — 40,000$</li>
-        </ul>
-      </div>
+      <div class="service-grid" id="servicesContainer"></div>
     </div>
 
     <div id="vip" class="card">
@@ -92,6 +75,15 @@
         <option value="" disabled selected>-- Сначала выберите сотрудницу --</option>
       </select>
 
+      <div id="groupOption" style="display:none;">
+        <label>Партнёр:</label>
+        <select id="groupPartnerSelect">
+          <option value="escort">Вторая эскортница</option>
+          <option value="custom">Ваш человек</option>
+        </select>
+        <input type="text" id="customPartnerName" placeholder="Ник вашего человека" style="display:none; margin-top: 10px" />
+      </div>
+
       <label for="orderDate">Дата:</label>
       <input type="date" id="orderDate" name="orderDate" required />
 
@@ -106,6 +98,8 @@
 
       <label for="promoCode">Промокод:</label>
       <input type="text" id="promoCode" name="promoCode" placeholder="YRA" />
+
+      <div id="finalPrice" style="margin-top: 10px; font-weight: bold; color: var(--accent);"></div>
 
       <button type="submit">Отправить</button>
     </form>
