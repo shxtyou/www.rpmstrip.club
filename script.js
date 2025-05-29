@@ -207,3 +207,24 @@ document.querySelectorAll('.tab-link').forEach(link => {
 
   renderServices(); // начальная отрисовка
 });
+
+// VIP кнопка открывает форму заказа с VIP-услугой
+const vipBtn = document.querySelector('#vipOrderBtn');
+if (vipBtn) {
+  vipBtn.addEventListener('click', () => {
+    openOrderPopup();
+    document.getElementById('personSelect').value = 'Бриз';
+    updateServiceSelect('Бриз');
+    setTimeout(() => {
+      const vipService = [...serviceSelect.options].find(o => o.textContent.toLowerCase().includes('ночь'));
+      if (vipService) serviceSelect.value = vipService.value;
+      serviceSelect.dispatchEvent(new Event('change'));
+    }, 100);
+    document.getElementById('orderDate').style.display = 'none';
+    document.getElementById('orderTime').style.display = 'none';
+    document.getElementById('promoCode').style.display = 'none';
+    document.querySelector("label[for='orderDate']").style.display = 'none';
+    document.querySelector("label[for='orderTime']").style.display = 'none';
+    document.querySelector("label[for='promoCode']").style.display = 'none';
+  });
+}
