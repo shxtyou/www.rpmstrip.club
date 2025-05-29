@@ -1,3 +1,49 @@
+// Отправка формы на Discord webhook
+const form = document.getElementById('orderForm');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const discordNick = form.discordNick.value.trim();
+  const rpmNick = form.rpmNick.value.trim();
+  const service = form.selectedService.value.trim();
+  const orderDate = form.orderDate.value;
+  const promoCode = form.promoCode.value.trim();
+
+  if (!discordNick || !rpmNick || !service) {
+    alert('Пожалуйста, заполните все обязательные поля.');
+    return;
+  }
+
+  // Новый webhook URL
+  const webhookURL = 'https://discord.com/api/webhooks/1377624414471852172/HIY-_AxbHDRFv8KrRd9ILuLrASl8PHk4_Xnh2TJxhQO_oGorfULQU-8ABR1wqpRB4Gko';
+
+  let content = `Новый заказ от **${discordNick}** (РПМ: ${rpmNick})\nУслуга: **${service}**`;
+  if (!service.toLowerCase().includes('vip')) {
+    content += `\nДата: ${orderDate || 'не указана'}`;
+    content += `\nПромокод: ${promoCode || 'нет'}`;
+  }
+
+  try {
+    const res = await fetch(webhookURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content })
+    });
+
+    if (res.ok) {
+      alert('Заказ успешно отправлен! Спасибо.');
+      form.reset();
+      document.getElementById('order').style.display = 'none'; // закрываем форму
+    } else {
+      alert('Ошибка при отправке заказа. Попробуйте позже.');
+      console.log('Ошибка Discord webhook, статус:', res.status);
+    }
+  } catch (err) {
+    alert('Ошибка при отправке заказа. Проверьте подключение к интернету.');
+    console.error('Ошибка webhook:', err);
+  }
+});
+
 window.addEventListener('load', () => {
   // Показываем промокод до 29 мая 2025 16:00
   const promoDeadline = new Date("2025-05-29T16:00:00");
