@@ -1,5 +1,4 @@
 window.addEventListener('load', () => {
-  // Показываем промокод до 29 мая 2025 16:00
   const promoDeadline = new Date("2025-05-29T16:00:00");
   if (new Date() < promoDeadline) {
     const promo = document.getElementById("promoPopup");
@@ -9,13 +8,11 @@ window.addEventListener('load', () => {
     }, 10000);
   }
 
-  // Установка минимальной даты в поле даты (сегодняшняя)
   const orderDateInput = document.getElementById('orderDate');
   const todayStr = new Date().toISOString().split('T')[0];
   orderDateInput.min = todayStr;
 });
 
-// --- Вкладки основного меню ---
 document.querySelectorAll('.tab-link').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -30,7 +27,6 @@ document.querySelectorAll('.tab-link').forEach(link => {
   });
 });
 
-// --- Вкладки с сотрудницами в прайсе ---
 const personTabs = document.querySelectorAll('.person-tab');
 const serviceLists = document.querySelectorAll('.service-list');
 
@@ -48,7 +44,6 @@ personTabs.forEach(tab => {
   });
 });
 
-// --- Кнопки открытия и закрытия формы заказа ---
 const orderToggle = document.getElementById('orderToggle');
 const orderPopup = document.getElementById('order');
 const closeOrderBtn = document.getElementById('closeOrder');
@@ -76,7 +71,6 @@ function closeOrderPopup() {
   }, 400);
 }
 
-// --- Обновление списка услуг при выборе сотрудницы ---
 const personSelect = document.getElementById('personSelect');
 const serviceSelect = document.getElementById('serviceSelect');
 
@@ -85,7 +79,6 @@ personSelect.addEventListener('change', () => {
   updateServiceSelect(selectedPerson);
 });
 
-// Функция обновления select услуг из списка выбранной сотрудницы
 function updateServiceSelect(personName) {
   if (!personName) {
     serviceSelect.innerHTML = '<option value="" disabled selected>-- Сначала выберите сотрудницу --</option>';
@@ -93,7 +86,6 @@ function updateServiceSelect(personName) {
     return;
   }
 
-  // Получаем id списка услуг по имени сотрудницы
   let listId = '';
   if (personName.toLowerCase() === 'бриз') listId = 'briz';
   else if (personName.toLowerCase() === 'лиса') listId = 'lisa';
@@ -110,14 +102,12 @@ function updateServiceSelect(personName) {
   serviceSelect.innerHTML = '';
   serviceSelect.disabled = false;
 
-  // Добавляем placeholder
   const placeholder = document.createElement('option');
   placeholder.textContent = '-- Выберите услугу --';
   placeholder.disabled = true;
   placeholder.selected = true;
   serviceSelect.appendChild(placeholder);
 
-  // Добавляем услуги в select
   items.forEach(item => {
     const option = document.createElement('option');
     option.value = item.textContent.trim();
@@ -127,7 +117,6 @@ function updateServiceSelect(personName) {
   });
 }
 
-// --- Отправка формы заказа ---
 const form = document.getElementById('orderForm');
 
 form.addEventListener('submit', async (e) => {
@@ -140,13 +129,11 @@ form.addEventListener('submit', async (e) => {
   const orderDate = form.orderDate.value;
   const promoCode = form.promoCode.value.trim();
 
-  // Проверка обязательных полей
   if (!discordNick || !rpmNick || !person || !service) {
     alert('Пожалуйста, заполните все обязательные поля.');
     return;
   }
 
-  // Валидация даты — не в прошлом
   if (orderDate) {
     const selectedDate = new Date(orderDate);
     const today = new Date();
@@ -162,7 +149,6 @@ form.addEventListener('submit', async (e) => {
 
   const webhookURL = 'https://discord.com/api/webhooks/1377624414471852172/HIY-_AxbHDRFv8KrRd9ILuLrASl8PHk4_Xnh2TJxhQO_oGorfULQU-8ABR1wqpRB4Gko';
 
-  // Формируем содержимое сообщения для Discord
   let content = `Новый заказ от **${discordNick}** (РПМ: ${rpmNick})\n` +
                 `Сотрудница: **${person}**\n` +
                 `Услуга: **${service}**\n` +
@@ -190,18 +176,14 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// --- Сброс формы ---
 function resetOrderForm() {
   form.reset();
 
-  // Устанавливаем селект услуг в дефолтное состояние
   serviceSelect.innerHTML = '<option value="" disabled selected>-- Сначала выберите сотрудницу --</option>';
   serviceSelect.disabled = true;
 
-  // Сбрасываем сотрудницу
   personSelect.value = "";
 
-  // Обновляем min дату для даты заказа
   const orderDateInput = document.getElementById('orderDate');
   const todayStr = new Date().toISOString().split('T')[0];
   orderDateInput.min = todayStr;
