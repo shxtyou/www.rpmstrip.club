@@ -29,6 +29,19 @@ window.addEventListener('DOMContentLoaded', () => {
   const orderDateInput = document.getElementById('orderDate');
   orderDateInput.min = new Date().toISOString().split('T')[0];
 
+document.querySelectorAll('.tab-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const tabId = link.dataset.tab;
+
+    document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+    document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+
+    document.getElementById(tabId)?.classList.add('active');
+    link.classList.add('active');
+  });
+});
+
   const container = document.getElementById('servicesContainer');
   const tabs = document.querySelectorAll('.person-tab');
   const groupOption = document.getElementById('groupOption');
