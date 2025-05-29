@@ -1,189 +1,223 @@
+/* Общие стили */
 body {
-  background: linear-gradient(160deg, #2c0735, #541a5f, #7c2c8d);
-  color: #e6d6f3;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #111;
+  color: #eee;
   margin: 0;
-  padding: 0;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  padding: 1rem;
+  min-height: 100vh;
 }
 
 h1, h2 {
   text-align: center;
-  color: #cba0ff;
+  font-weight: 700;
 }
 
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Вкладки */
 nav {
-  text-align: center;
-  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-nav a {
-  display: inline-block;
-  background-color: #7c2c8d;
-  color: white;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 10px;
-  text-decoration: none;
+.tab-link {
+  color: #aaa;
   cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-bottom: 2px solid transparent;
+  text-decoration: none;
+  transition: color 0.3s, border-bottom-color 0.3s;
 }
 
-nav a:hover,
-nav a.active {
-  background-color: #a347c7;
+.tab-link.active {
+  color: #ff4081;
+  border-bottom-color: #ff4081;
 }
 
+/* Карточки */
 .card {
-  background-color: #491b5f;
-  border-radius: 20px;
-  padding: 24px;
-  margin: 20px 0;
-  box-shadow: 0 4px 25px rgba(190, 134, 255, 0.3);
   display: none;
+  background: #222;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #0005;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .card.active {
   display: block;
+  opacity: 1;
 }
 
-.promo-popup {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #65228f;
-  padding: 15px 25px;
-  color: white;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
-  z-index: 9999;
-}
-
-.order-icon {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  cursor: pointer;
-  z-index: 1000;
-}
-
-.order-popup {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
-  width: 320px;
-  background-color: #4e1e61;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 25px rgba(190, 134, 255, 0.6);
-  color: #e6d6f3;
-  z-index: 1001;
-  display: none;
-}
-
-.order-popup form {
+/* Подвкладки для прайса */
+.subtabs {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.order-popup label {
-  margin-top: 12px;
-  margin-bottom: 4px;
-  font-weight: bold;
-}
-
-.order-popup input,
-.order-popup select {
-  background-color: #7c2c8d;
-  border-radius: 10px;
-  padding: 10px;
+.subtab-link {
+  padding: 0.3rem 0.8rem;
+  background: #333;
   border: none;
-  color: white;
-  font-size: 16px;
-}
-
-.order-popup button[type="submit"] {
-  margin-top: 20px;
-  background-color: #a347c7;
-  padding: 14px;
-  font-size: 18px;
-  font-weight: bold;
+  color: #ccc;
+  border-radius: 4px;
   cursor: pointer;
-  border: none;
-  border-radius: 10px;
-  color: white;
   transition: background-color 0.3s;
 }
 
-.order-popup button[type="submit"]:hover {
-  background-color: #c062ea;
+.subtab-link.active {
+  background-color: #ff4081;
+  color: white;
 }
 
-.order-popup button#closeOrder {
-  margin-top: 10px;
-  background: transparent;
-  color: #cba0ff;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  text-decoration: underline;
-}
-
-.price-note {
-  font-style: italic;
-  font-size: 14px;
-  margin-bottom: 10px;
-  color: #d7b0f2;
-}
-
+/* Сетки услуг */
 .service-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
 }
 
 .service-card {
-  flex: 1 1 calc(50% - 10px);
-  background-color: #4e1e61;
-  color: #fff;
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+  background: #444;
+  border-radius: 6px;
+  padding: 0.6rem;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  position: relative;
+  font-weight: 600;
   text-align: center;
+  transition: background-color 0.25s;
 }
 
-.service-card:hover {
-  transform: scale(1.02);
-  background-color: #7c2c8d;
+.service-card:hover, .service-card:focus {
+  background-color: #ff4081;
+  color: white;
+  outline: none;
 }
 
-@media (max-width: 600px) {
-  nav a {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-  }
+/* Tooltip подсказки */
+.service-card[data-description]:hover::after,
+.service-card[data-description]:focus::after {
+  content: attr(data-description);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #eee;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0.9;
+  z-index: 10;
+}
 
-  .container {
-    padding: 10px;
-  }
+/* Попап заказа */
+.order-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #222;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #ff4081aa;
+  width: 320px;
+  max-width: 90vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+}
 
-  .order-popup {
-    width: 90%;
-    right: 5%;
-    bottom: 80px;
-  }
+.order-popup.show {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-  .service-card {
-    flex: 1 1 100%;
-  }
+/* Кнопка закрытия */
+.close-btn {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #ff4081;
+  cursor: pointer;
+}
+
+/* Кнопки */
+.btn {
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 1rem;
+  display: block;
+  width: 100%;
+  user-select: none;
+}
+
+.btn:hover {
+  background-color: #e0306f;
+}
+
+.btn-reset {
+  background-color: #555;
+  margin-top: 0.25rem;
+}
+
+.btn-reset:hover {
+  background-color: #666;
+}
+
+/* Промо-попап */
+.promo-popup {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  background: #ff4081;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border-radius: 6px;
+  box-shadow: 0 0 12px #ff4081aa;
+  font-weight: 700;
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.promo-popup.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Группа полей */
+#promoGroup {
+  margin-top: 1rem;
+}
+
+#orderDateGroup {
+  margin-top: 1rem;
+}
+
+/* Скрытие элементов */
+.hidden {
+  display: none !important;
 }
