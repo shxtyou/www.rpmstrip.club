@@ -1,4 +1,3 @@
-// Обновлённый script.js с фильтрацией по девушкам и логикой второй эскортницы
 window.addEventListener('DOMContentLoaded', () => {
   const services = {
     briz: [
@@ -29,21 +28,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const orderDateInput = document.getElementById('orderDate');
   orderDateInput.min = new Date().toISOString().split('T')[0];
 
-document.querySelectorAll('.tab-link').forEach(link => {
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    const tabId = link.dataset.tab;
+  document.querySelectorAll('.tab-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const tabId = link.dataset.tab;
 
-    document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
-    document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+      document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
 
-    document.getElementById(tabId)?.classList.add('active');
-    link.classList.add('active');
+      document.getElementById(tabId)?.classList.add('active');
+      link.classList.add('active');
+    });
   });
-});
 
   const container = document.getElementById('servicesContainer');
-  const tabs = document.querySelectorAll('.person-tab');
   const groupOption = document.getElementById('groupOption');
   const groupPartnerSelect = document.getElementById('groupPartnerSelect');
   const customPartnerName = document.getElementById('customPartnerName');
@@ -52,45 +50,28 @@ document.querySelectorAll('.tab-link').forEach(link => {
   const finalPrice = document.getElementById('finalPrice');
   const promoInput = document.getElementById('promoCode');
 
-  let currentPerson = 'briz';
-
   function renderServices() {
     container.innerHTML = '';
-    const all = [...services[currentPerson], ...services.both];
-    all.forEach((s, i) => {
+    const allServices = [...services.briz, ...services.lisa, ...services.both];
+    allServices.forEach((s, i) => {
       const card = document.createElement('div');
       card.className = 'service-card';
       card.innerHTML = `<h4>${s.name}</h4><p>${s.price.toLocaleString()}$</p><button data-index="${i}">Выбрать</button>`;
       card.dataset.index = i;
-      card.dataset.person = currentPerson;
       container.appendChild(card);
     });
   }
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      currentPerson = tab.dataset.person;
-      renderServices();
-    });
-  });
 
   container.addEventListener('click', e => {
     const btn = e.target.closest('button[data-index]');
     if (!btn) return;
     const index = +btn.dataset.index;
-    const list = [...services[currentPerson], ...services.both];
-    const service = list[index];
+    const all = [...services.briz, ...services.lisa, ...services.both];
+    const service = all[index];
     openOrderPopup();
-    personSelect.value = currentPerson === 'briz' ? 'Бриз' : 'Лиса';
-    updateServiceSelect(personSelect.value);
-    setTimeout(() => {
-      [...serviceSelect.options].forEach(opt => {
-        if (opt.textContent === service.name) serviceSelect.value = opt.value;
-      });
-      serviceSelect.dispatchEvent(new Event('change'));
-    }, 100);
+    serviceSelect.innerHTML = `<option selected>${service.name}</option>`;
+    serviceSelect.disabled = true;
+    updateFinalPrice();
   });
 
   personSelect.addEventListener('change', () => {
@@ -157,13 +138,12 @@ document.querySelectorAll('.tab-link').forEach(link => {
       person: e.target.person.value,
       service: e.target.service.value,
       orderDate: e.target.orderDate.value,
-      orderTime: e.target.orderTime.value,
       promoCode: e.target.promoCode.value.trim(),
       partnerType: groupPartnerSelect.value,
       partnerName: customPartnerName.value.trim()
     };
 
-    if (!data.discordNick || !data.rpmNick || !data.person || !data.service || !data.orderDate || !data.orderTime) {
+    if (!data.discordNick || !data.rpmNick || !data.person || !data.service || !data.orderDate) {
       alert('Заполните все поля.');
       return;
     }
@@ -178,7 +158,7 @@ document.querySelectorAll('.tab-link').forEach(link => {
       }
     }
 
-    let summary = `Новый заказ от **${data.discordNick}** (РПМ: ${data.rpmNick})\nСотрудница: **${data.person}**\nУслуга: **${data.service}**\nДата: ${data.orderDate} в ${data.orderTime}`;
+    let summary = `Новый заказ от **${data.discordNick}** (РПМ: ${data.rpmNick})\nСотрудница: **${data.person}**\nУслуга: **${data.service}**\nДата: ${data.orderDate}`;
     if (data.service.includes('Групповой секс')) {
       summary += `\nПартнёр: ${data.partnerName}`;
     }
@@ -205,5 +185,5 @@ document.querySelectorAll('.tab-link').forEach(link => {
     }
   });
 
-  renderServices(); // начальная отрисовка
+  renderServices();
 });
