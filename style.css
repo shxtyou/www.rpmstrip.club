@@ -24,12 +24,12 @@ body {
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 20px;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4 {
   text-align: center;
   color: var(--accent);
 }
@@ -69,7 +69,7 @@ nav a:hover {
 
 .tabs-persons {
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 .person-tab {
   background: #541a5f;
@@ -89,25 +89,40 @@ nav a:hover {
   color: var(--text-dark);
 }
 
-.service-list {
-  max-width: 500px;
-  margin: 0 auto;
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
 }
-.service-list.active {
-  display: block;
+
+.service-card {
+  background: rgba(255,255,255,0.08);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease, background 0.3s ease;
+  box-shadow: 0 0 15px #00000022;
 }
-.service-list:not(.active) {
-  display: none;
+.service-card:hover {
+  transform: translateY(-5px);
+  background: var(--accent-hover);
+  color: var(--text-dark);
 }
-.service-list li {
-  padding: 6px 10px;
-  margin-bottom: 6px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 6px;
+.service-card h4 {
+  margin-bottom: 10px;
+}
+.service-card button {
+  background: var(--accent);
+  color: var(--text-dark);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
   transition: background 0.3s ease;
 }
-.service-list li:hover {
+.service-card button:hover {
   background: var(--accent-hover);
 }
 
@@ -131,7 +146,7 @@ nav a:hover {
   top: 50%;
   left: 50%;
   width: 90%;
-  max-width: 380px;
+  max-width: 420px;
   background: rgba(0, 0, 0, 0.8);
   border-radius: 12px;
   transform: translate(-50%, -50%);
