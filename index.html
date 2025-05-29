@@ -41,6 +41,10 @@
         <button class="person-tab active" data-person="briz">Бриз</button>
         <button class="person-tab" data-person="lisa">Лиса</button>
       </div>
+      <div class="category-tabs" id="categoryTabs">
+        <button class="category-tab active" data-category="intim">💋 Интимные услуги</button>
+        <button class="category-tab" data-category="extra">💃 Дополнительные услуги</button>
+      </div>
       <div class="service-grid" id="servicesContainer"></div>
     </div>
 
@@ -57,66 +61,43 @@
       <button id="vipOrderBtn">Оформить VIP</button>
     </div>
 
-    <div id="order" class="order-popup" role="dialog" aria-modal="true" aria-labelledby="orderTitle" style="display:none;">
-      <h2 id="orderTitle">Заказ</h2>
-      <form id="orderForm" novalidate>
+    <div id="order" class="order-popup" style="display:none;">
+      <h2>Заказ</h2>
+      <form id="orderForm">
         <label for="discordNick">Discord:</label>
-        <input type="text" id="discordNick" name="discordNick" placeholder="wsometeazew" required />
+        <input type="text" id="discordNick" required>
 
         <label for="rpmNick">РПМ-ник:</label>
-        <input type="text" id="rpmNick" name="rpmNick" placeholder="Ваш ник в игре" required />
+        <input type="text" id="rpmNick" required>
 
         <label for="personSelect">Сотрудница:</label>
-        <select id="personSelect" name="person" required>
-          <option value="" disabled selected>-- Выберите --</option>
+        <select id="personSelect" required>
+          <option disabled selected>-- Выберите --</option>
           <option value="Бриз">Бриз</option>
           <option value="Лиса">Лиса</option>
         </select>
 
         <label for="serviceSelect">Услуга:</label>
-        <select id="serviceSelect" name="service" required disabled>
-          <option value="" disabled selected>-- Сначала выберите сотрудницу --</option>
-        </select>
-
-        <div id="groupOption" style="display:none;">
-          <label>Партнёр:</label>
-          <select id="groupPartnerSelect">
-            <option value="escort">Вторая эскортница</option>
-            <option value="custom">Ваш человек</option>
-          </select>
-          <input type="text" id="customPartnerName" placeholder="Ник вашего человека" style="display:none; margin-top: 10px" />
-        </div>
+        <select id="serviceSelect" disabled required></select>
 
         <label for="orderDate">Дата:</label>
-        <input type="date" id="orderDate" name="orderDate" required />
+        <input type="date" id="orderDate" required>
 
         <label for="orderTime">Время:</label>
-        <select id="orderTime" name="orderTime" required>
-          <option value="" disabled selected>-- Время --</option>
+        <select id="orderTime" required>
+          <option disabled selected>-- Время --</option>
           <option value="18:00">18:00</option>
           <option value="19:00">19:00</option>
-          <option value="20:00">20:00</option>
-          <option value="21:00">21:00</option>
         </select>
 
         <label for="promoCode">Промокод:</label>
-        <input type="text" id="promoCode" name="promoCode" placeholder="YRA" />
+        <input type="text" id="promoCode" placeholder="YRA">
 
-        <div id="finalPrice" style="margin-top: 10px; font-weight: bold; color: var(--accent);"></div>
-
+        <div id="finalPrice"></div>
         <button type="submit">Отправить</button>
       </form>
       <button id="closeOrder">Закрыть</button>
     </div>
-
-  <script>
-    const toggleBtn = document.getElementById('themeToggle');
-    toggleBtn.addEventListener('click', () => {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme');
-      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-      toggleBtn.textContent = current === 'dark' ? '☀️' : '🌙';
-    });
-  </script>
+  </div>
 </body>
 </html>
