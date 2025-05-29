@@ -54,63 +54,60 @@
         <li>VIP-раздел в Discord с закрытым контентом</li>
         <li>Подарки и бонусы каждый месяц</li>
       </ul>
-      <button onclick="window.scrollTo(0, document.body.scrollHeight)">Оформить VIP</button>
+      <button id="vipOrderBtn">Оформить VIP</button>
     </div>
-  </div>
 
-  <img src="https://cdn-icons-png.flaticon.com/512/34/34568.png" alt="Корзина" class="order-icon" id="orderToggle" title="Оформить заказ" />
+    <div id="order" class="order-popup" role="dialog" aria-modal="true" aria-labelledby="orderTitle" style="display:none;">
+      <h2 id="orderTitle">Заказ</h2>
+      <form id="orderForm" novalidate>
+        <label for="discordNick">Discord:</label>
+        <input type="text" id="discordNick" name="discordNick" placeholder="wsometeazew" required />
 
-  <div id="order" class="order-popup" role="dialog" aria-modal="true" aria-labelledby="orderTitle" style="display:none;">
-    <h2 id="orderTitle">Заказ</h2>
-    <form id="orderForm" novalidate>
-      <label for="discordNick">Discord:</label>
-      <input type="text" id="discordNick" name="discordNick" placeholder="wsometeazew" required />
+        <label for="rpmNick">РПМ-ник:</label>
+        <input type="text" id="rpmNick" name="rpmNick" placeholder="Ваш ник в игре" required />
 
-      <label for="rpmNick">РПМ-ник:</label>
-      <input type="text" id="rpmNick" name="rpmNick" placeholder="Ваш ник в игре" required />
-
-      <label for="personSelect">Сотрудница:</label>
-      <select id="personSelect" name="person" required>
-        <option value="" disabled selected>-- Выберите --</option>
-        <option value="Бриз">Бриз</option>
-        <option value="Лиса">Лиса</option>
-      </select>
-
-      <label for="serviceSelect">Услуга:</label>
-      <select id="serviceSelect" name="service" required disabled>
-        <option value="" disabled selected>-- Сначала выберите сотрудницу --</option>
-      </select>
-
-      <div id="groupOption" style="display:none;">
-        <label>Партнёр:</label>
-        <select id="groupPartnerSelect">
-          <option value="escort">Вторая эскортница</option>
-          <option value="custom">Ваш человек</option>
+        <label for="personSelect">Сотрудница:</label>
+        <select id="personSelect" name="person" required>
+          <option value="" disabled selected>-- Выберите --</option>
+          <option value="Бриз">Бриз</option>
+          <option value="Лиса">Лиса</option>
         </select>
-        <input type="text" id="customPartnerName" placeholder="Ник вашего человека" style="display:none; margin-top: 10px" />
-      </div>
 
-      <label for="orderDate">Дата:</label>
-      <input type="date" id="orderDate" name="orderDate" required />
+        <label for="serviceSelect">Услуга:</label>
+        <select id="serviceSelect" name="service" required disabled>
+          <option value="" disabled selected>-- Сначала выберите сотрудницу --</option>
+        </select>
 
-      <label for="orderTime">Время:</label>
-      <select id="orderTime" name="orderTime" required>
-        <option value="" disabled selected>-- Время --</option>
-        <option value="18:00">18:00</option>
-        <option value="19:00">19:00</option>
-        <option value="20:00">20:00</option>
-        <option value="21:00">21:00</option>
-      </select>
+        <div id="groupOption" style="display:none;">
+          <label>Партнёр:</label>
+          <select id="groupPartnerSelect">
+            <option value="escort">Вторая эскортница</option>
+            <option value="custom">Ваш человек</option>
+          </select>
+          <input type="text" id="customPartnerName" placeholder="Ник вашего человека" style="display:none; margin-top: 10px" />
+        </div>
 
-      <label for="promoCode">Промокод:</label>
-      <input type="text" id="promoCode" name="promoCode" placeholder="YRA" />
+        <label for="orderDate">Дата:</label>
+        <input type="date" id="orderDate" name="orderDate" required />
 
-      <div id="finalPrice" style="margin-top: 10px; font-weight: bold; color: var(--accent);"></div>
+        <label for="orderTime">Время:</label>
+        <select id="orderTime" name="orderTime" required>
+          <option value="" disabled selected>-- Время --</option>
+          <option value="18:00">18:00</option>
+          <option value="19:00">19:00</option>
+          <option value="20:00">20:00</option>
+          <option value="21:00">21:00</option>
+        </select>
 
-      <button type="submit">Отправить</button>
-    </form>
-    <button id="closeOrder">Закрыть</button>
-  </div>
+        <label for="promoCode">Промокод:</label>
+        <input type="text" id="promoCode" name="promoCode" placeholder="YRA" />
+
+        <div id="finalPrice" style="margin-top: 10px; font-weight: bold; color: var(--accent);"></div>
+
+        <button type="submit">Отправить</button>
+      </form>
+      <button id="closeOrder">Закрыть</button>
+    </div>
 
   <script>
     const toggleBtn = document.getElementById('themeToggle');
