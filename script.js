@@ -1,129 +1,153 @@
+// Обновлённый script.js с фильтрацией по девушкам и логикой второй эскортницы
 window.addEventListener('DOMContentLoaded', () => {
-  const promoDeadline = new Date("2025-05-29T16:00:00");
-  if (new Date() < promoDeadline) {
-    const promo = document.getElementById("promoPopup");
-    promo.style.display = "block";
-    setTimeout(() => promo.style.display = "none", 10000);
-  }
+  const services = {
+    briz: [
+      { name: 'Минет', price: 25000 },
+      { name: 'Фемдом', price: 38000 },
+      { name: 'Шибари', price: 20000 },
+      { name: 'Фут Джоб', price: 20000 },
+      { name: 'Бондаж', price: 20000 },
+      { name: 'Ролевая игра (Сценарий + 4,000$)', price: 24000 },
+      { name: 'Ночь со мной (до 8 часов)', price: 100000 },
+    ],
+    lisa: [
+      { name: 'Подчинение', price: 80000 },
+      { name: 'BDSM', price: 40000 },
+      { name: 'Спанкинг', price: 15000 },
+      { name: 'Пеггинг', price: 15000 },
+      { name: 'Игры с воском', price: 17000 },
+      { name: 'МейлДом', price: 22000 },
+    ],
+    both: [
+      { name: 'Стриптиз / Приват-танец', price: 10000 },
+      { name: 'Совместная ванна + массаж', price: 25000 },
+      { name: 'Фото-/видеосъёмка + сопровождение', price: 80000 },
+      { name: 'Групповой секс (партнёр на выбор: Вторая эскортница/Ваш человек)', price: 40000, isGroup: true },
+    ]
+  };
 
   const orderDateInput = document.getElementById('orderDate');
-  const todayStr = new Date().toISOString().split('T')[0];
-  orderDateInput.min = todayStr;
+  orderDateInput.min = new Date().toISOString().split('T')[0];
 
-  // Переключение вкладок
-  document.querySelectorAll('.tab-link').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const tabId = link.dataset.tab;
-      document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-      document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
-      document.getElementById(tabId)?.classList.add('active');
-      link.classList.add('active');
-    });
-  });
-
-  // Переключение девушек
-  const personTabs = document.querySelectorAll('.person-tab');
-  const serviceLists = document.querySelectorAll('.service-list');
-
-  personTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      personTabs.forEach(t => t.classList.remove('active'));
-      serviceLists.forEach(s => s.classList.remove('active'));
-
-      const personId = tab.dataset.person;
-      document.getElementById(personId)?.classList.add('active');
-      tab.classList.add('active');
-      updateServiceSelect(personId);
-    });
-  });
-
-  // Автозаполнение формы при клике на услугу
-  document.querySelectorAll('.service-list li').forEach(item => {
-    item.addEventListener('click', () => {
-      document.getElementById('orderToggle').click();
-      const activePerson = document.querySelector('.person-tab.active')?.textContent.trim();
-      const personSelect = document.getElementById('personSelect');
-      const serviceSelect = document.getElementById('serviceSelect');
-
-      personSelect.value = activePerson;
-      updateServiceSelect(activePerson);
-      setTimeout(() => {
-        [...serviceSelect.options].forEach(opt => {
-          if (opt.value === item.textContent.trim()) serviceSelect.value = opt.value;
-        });
-      }, 100);
-    });
-  });
-
-  // Модальное окно заказа
-  const orderToggle = document.getElementById('orderToggle');
-  const orderPopup = document.getElementById('order');
-  const closeOrderBtn = document.getElementById('closeOrder');
-
-  orderToggle.addEventListener('click', () => openOrderPopup());
-  closeOrderBtn.addEventListener('click', () => closeOrderPopup());
-
-  function openOrderPopup() {
-    orderPopup.style.display = 'block';
-    setTimeout(() => orderPopup.classList.add('show'), 10);
-    resetOrderForm();
-  }
-
-  function closeOrderPopup() {
-    orderPopup.classList.remove('show');
-    setTimeout(() => orderPopup.style.display = 'none', 400);
-  }
-
-  // Выбор услуги по сотруднице
-  const personSelect = document.getElementById('personSelect');
+  const container = document.getElementById('servicesContainer');
+  const tabs = document.querySelectorAll('.person-tab');
+  const groupOption = document.getElementById('groupOption');
+  const groupPartnerSelect = document.getElementById('groupPartnerSelect');
+  const customPartnerName = document.getElementById('customPartnerName');
   const serviceSelect = document.getElementById('serviceSelect');
+  const personSelect = document.getElementById('personSelect');
+  const finalPrice = document.getElementById('finalPrice');
+  const promoInput = document.getElementById('promoCode');
+
+  let currentPerson = 'briz';
+
+  function renderServices() {
+    container.innerHTML = '';
+    const all = [...services[currentPerson], ...services.both];
+    all.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = 'service-card';
+      card.innerHTML = `<h4>${s.name}</h4><p>${s.price.toLocaleString()}$</p><button data-index="${i}">Выбрать</button>`;
+      card.dataset.index = i;
+      card.dataset.person = currentPerson;
+      container.appendChild(card);
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentPerson = tab.dataset.person;
+      renderServices();
+    });
+  });
+
+  container.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-index]');
+    if (!btn) return;
+    const index = +btn.dataset.index;
+    const list = [...services[currentPerson], ...services.both];
+    const service = list[index];
+    openOrderPopup();
+    personSelect.value = currentPerson === 'briz' ? 'Бриз' : 'Лиса';
+    updateServiceSelect(personSelect.value);
+    setTimeout(() => {
+      [...serviceSelect.options].forEach(opt => {
+        if (opt.textContent === service.name) serviceSelect.value = opt.value;
+      });
+      serviceSelect.dispatchEvent(new Event('change'));
+    }, 100);
+  });
 
   personSelect.addEventListener('change', () => {
     updateServiceSelect(personSelect.value);
   });
 
-  function updateServiceSelect(personName) {
-    if (!personName) {
-      serviceSelect.innerHTML = '<option value="" disabled selected>-- Сначала выберите сотрудницу --</option>';
-      serviceSelect.disabled = true;
-      return;
+  serviceSelect.addEventListener('change', () => {
+    const selected = serviceSelect.value;
+    if (selected.includes('Групповой секс')) {
+      groupOption.style.display = 'block';
+    } else {
+      groupOption.style.display = 'none';
+      customPartnerName.style.display = 'none';
     }
+    updateFinalPrice();
+  });
 
-    const id = personName.toLowerCase() === 'бриз' ? 'briz' : 'lisa';
-    const list = document.getElementById(id);
-    const items = list?.querySelectorAll('li') || [];
+  groupPartnerSelect.addEventListener('change', () => {
+    const show = groupPartnerSelect.value === 'custom';
+    customPartnerName.style.display = show ? 'block' : 'none';
+  });
 
-    serviceSelect.innerHTML = '';
-    const placeholder = document.createElement('option');
-    placeholder.textContent = '-- Выберите услугу --';
-    placeholder.disabled = true;
-    placeholder.selected = true;
-    serviceSelect.appendChild(placeholder);
+  promoInput.addEventListener('input', updateFinalPrice);
 
-    items.forEach(item => {
+  function updateServiceSelect(name) {
+    const key = name.toLowerCase() === 'бриз' ? 'briz' : 'lisa';
+    const all = [...services[key], ...services.both];
+    serviceSelect.innerHTML = '<option disabled selected>-- Выберите услугу --</option>';
+    all.forEach(s => {
       const opt = document.createElement('option');
-      opt.value = opt.textContent = item.textContent.trim();
-      opt.title = item.title;
+      opt.textContent = s.name;
+      opt.value = s.name;
       serviceSelect.appendChild(opt);
     });
-
     serviceSelect.disabled = false;
   }
 
-  // Отправка формы
-  const form = document.getElementById('orderForm');
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
+  function updateFinalPrice() {
+    const selected = serviceSelect.value;
+    const all = [...services.briz, ...services.lisa, ...services.both];
+    const promo = promoInput.value.trim();
+    const s = all.find(x => x.name === selected);
+    if (!s) return finalPrice.textContent = '';
+    let price = s.price;
+    if (promo.toUpperCase() === 'YRA') price *= 0.95;
+    finalPrice.textContent = `Итоговая цена: ${Math.round(price).toLocaleString()}$`;
+  }
 
+  function openOrderPopup() {
+    document.getElementById('order').style.display = 'block';
+    setTimeout(() => document.getElementById('order').classList.add('show'), 10);
+  }
+
+  document.getElementById('closeOrder').addEventListener('click', () => {
+    document.getElementById('order').classList.remove('show');
+    setTimeout(() => document.getElementById('order').style.display = 'none', 400);
+  });
+
+  document.getElementById('orderForm').addEventListener('submit', async e => {
+    e.preventDefault();
     const data = {
-      discordNick: form.discordNick.value.trim(),
-      rpmNick: form.rpmNick.value.trim(),
-      person: form.person.value,
-      service: form.service.value,
-      orderDate: form.orderDate.value,
-      orderTime: form.orderTime.value,
-      promoCode: form.promoCode.value.trim()
+      discordNick: e.target.discordNick.value.trim(),
+      rpmNick: e.target.rpmNick.value.trim(),
+      person: e.target.person.value,
+      service: e.target.service.value,
+      orderDate: e.target.orderDate.value,
+      orderTime: e.target.orderTime.value,
+      promoCode: e.target.promoCode.value.trim(),
+      partnerType: groupPartnerSelect.value,
+      partnerName: customPartnerName.value.trim()
     };
 
     if (!data.discordNick || !data.rpmNick || !data.person || !data.service || !data.orderDate || !data.orderTime) {
@@ -131,48 +155,42 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const content = `Новый заказ от **${data.discordNick}** (РПМ: ${data.rpmNick})\nСотрудница: **${data.person}**\nУслуга: **${data.service}**\nДата: ${data.orderDate} в ${data.orderTime}\nПромокод: ${data.promoCode || 'нет'}`;
+    if (data.service.includes('Групповой секс')) {
+      if (data.partnerType === 'custom' && !data.partnerName) {
+        alert('Укажите ник партнёра.');
+        return;
+      }
+      if (data.partnerType === 'escort') {
+        data.partnerName = data.person === 'Бриз' ? 'Лиса' : 'Бриз';
+      }
+    }
+
+    let summary = `Новый заказ от **${data.discordNick}** (РПМ: ${data.rpmNick})\nСотрудница: **${data.person}**\nУслуга: **${data.service}**\nДата: ${data.orderDate} в ${data.orderTime}`;
+    if (data.service.includes('Групповой секс')) {
+      summary += `\nПартнёр: ${data.partnerName}`;
+    }
+    if (data.promoCode) summary += `\nПромокод: ${data.promoCode}`;
+
     const webhookURL = 'https://discord.com/api/webhooks/1377624414471852172/HIY-_AxbHDRFv8KrRd9ILuLrASl8PHk4_Xnh2TJxhQO_oGorfULQU-8ABR1wqpRB4Gko';
 
     try {
       const res = await fetch(webhookURL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content })
+        body: JSON.stringify({ content: summary })
       });
-
       if (res.ok) {
         alert('Заказ отправлен!');
-        form.reset();
-        closeOrderPopup();
-      } else {
-        alert('Ошибка отправки.');
-      }
-    } catch (err) {
+        e.target.reset();
+        finalPrice.textContent = '';
+        customPartnerName.style.display = 'none';
+        document.getElementById('order').classList.remove('show');
+        setTimeout(() => document.getElementById('order').style.display = 'none', 400);
+      } else alert('Ошибка отправки.');
+    } catch {
       alert('Ошибка подключения.');
     }
   });
 
-  function resetOrderForm() {
-    form.reset();
-    updateServiceSelect();
-  }
-
-  // Переключение темы
-  const themeToggle = document.getElementById('themeToggle');
-  const html = document.documentElement;
-
-  function setTheme(theme) {
-    html.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-    themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
-  }
-
-  themeToggle.addEventListener('click', () => {
-    const current = html.getAttribute('data-theme');
-    setTheme(current === 'dark' ? 'light' : 'dark');
-  });
-
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  setTheme(savedTheme);
+  renderServices(); // начальная отрисовка
 });
