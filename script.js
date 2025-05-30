@@ -60,6 +60,27 @@ window.addEventListener('DOMContentLoaded', () => {
       card.dataset.index = i;
       container.appendChild(card);
     });
+
+const vipBtn = document.getElementById('vipOrderBtn');
+if (vipBtn) {
+  vipBtn.addEventListener('click', () => {
+    const order = document.getElementById('order');
+    order.style.display = 'block';
+    setTimeout(() => order.classList.add('show'), 10);
+
+    document.getElementById('orderTitle').textContent = "Оформление VIP";
+
+    document.getElementById('personSelect').disabled = true;
+    document.getElementById('serviceSelect').innerHTML = '<option selected>VIP Клиент</option>';
+    document.getElementById('serviceSelect').disabled = true;
+
+    document.getElementById('orderDate').style.display = 'none';
+    document.getElementById('promoCode').style.display = 'none';
+
+    document.getElementById('finalPrice').textContent = 'Итоговая цена: 150,000$';
+  });
+}
+
   }
 
   container.addEventListener('click', e => {
