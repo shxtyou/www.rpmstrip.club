@@ -1,0 +1,198 @@
+:root {
+  --bg: #0d0b16;
+  --fg: #eee;
+  --accent: #ff00c8;
+  --card-bg: rgba(20, 17, 34, 0.85);
+  --card-border: #3d3d5c;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1, h2 {
+  text-align: center;
+  color: var(--accent);
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.tab-link {
+  color: var(--fg);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+  transition: 0.3s;
+}
+
+.tab-link.active {
+  border-color: var(--accent);
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 20px;
+  border-radius: 15px;
+  display: none;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.card.active {
+  display: block;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.service-card {
+  background: #1a1629;
+  border: 1px solid var(--accent);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.service-card:hover {
+  background: #271c3a;
+}
+
+.service-card h4 {
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+
+.service-card button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.order-icon {
+  width: 48px;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.order-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  background: #1d162a;
+  color: var(--fg);
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  z-index: 1000;
+  opacity: 0;
+  transition: 0.4s ease;
+}
+
+.order-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+input, select {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0 12px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: #111;
+  color: var(--fg);
+}
+
+button[type="submit"],
+#closeOrder {
+  background: var(--accent);
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: bold;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--accent);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 999;
+}
+
+.promo-popup {
+  background: #20132e;
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+  border-bottom: 2px solid var(--accent);
+  font-weight: bold;
+  animation: slideInTop 0.5s ease;
+}
+
+.vip-button {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+#finalPrice.price-flash {
+  transition: color 0.3s ease;
+  animation: flashColor 1s ease;
+}
+
+@keyframes flashColor {
+  0% { color: var(--accent); }
+  50% { color: #fff; }
+  100% { color: var(--accent); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInTop {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
