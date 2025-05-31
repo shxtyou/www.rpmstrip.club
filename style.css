@@ -1,10 +1,10 @@
 :root {
-  --bg-dark: linear-gradient(160deg, #2c0735, #541a5f, #7c2c8d);
-  --bg-light: #f5f2fc;
-  --text-dark: #2c0735;
-  --text-light: #e6d6f3;
-  --accent: #cba0ff;
-  --accent-hover: #d98aff;
+  --bg-dark: linear-gradient(160deg, #0f001e, #2a003f, #47006b);
+  --bg-light: #fdf5ff;
+  --text-dark: #1a001f;
+  --text-light: #f2e9ff;
+  --accent: #ff00cc;
+  --accent-hover: #ff66ff;
 }
 
 [data-theme="dark"] body {
@@ -32,6 +32,7 @@ body {
 h1, h2, h3, h4 {
   text-align: center;
   color: var(--accent);
+  text-shadow: 0 0 10px var(--accent);
 }
 
 nav {
@@ -56,11 +57,11 @@ nav a:hover {
 
 .card {
   display: none;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
   padding: 20px;
   border-radius: 15px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 0 20px #00000022;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px var(--accent);
   animation: fadeIn 0.4s ease forwards;
 }
 .card.active {
@@ -75,30 +76,32 @@ nav a:hover {
 }
 
 .service-card {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
   padding: 15px;
   border-radius: 12px;
   text-align: center;
   transition: transform 0.3s ease, background 0.3s ease;
-  box-shadow: 0 0 15px #00000022;
+  box-shadow: 0 0 15px var(--accent);
 }
 .service-card:hover {
   transform: translateY(-5px);
   background: var(--accent-hover);
-  color: var(--text-dark);
+  color: #000;
+  box-shadow: 0 0 25px var(--accent-hover);
 }
 .service-card h4 {
   margin-bottom: 10px;
 }
 .service-card button {
   background: var(--accent);
-  color: var(--text-dark);
+  color: #000;
   border: none;
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   transition: background 0.3s ease;
+  box-shadow: 0 0 10px var(--accent);
 }
 .service-card button:hover {
   background: var(--accent-hover);
@@ -125,7 +128,7 @@ nav a:hover {
   left: 50%;
   width: 90%;
   max-width: 420px;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   border-radius: 12px;
   transform: translate(-50%, -50%);
   padding: 25px;
@@ -134,6 +137,7 @@ nav a:hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
+  box-shadow: 0 0 25px var(--accent);
 }
 .order-popup.show {
   opacity: 1;
@@ -155,14 +159,15 @@ nav a:hover {
   border-radius: 8px;
   border: none;
   font-size: 15px;
-  background: #6d3ea7;
+  background: #47006b;
   color: #fff;
   outline: none;
-  transition: background 0.3s ease;
+  box-shadow: 0 0 5px #000 inset, 0 0 8px var(--accent);
 }
 #orderForm input:focus,
 #orderForm select:focus {
-  background: #9b6be0;
+  background: #61008f;
+  box-shadow: 0 0 10px var(--accent-hover);
 }
 
 #orderForm button[type="submit"] {
@@ -171,11 +176,12 @@ nav a:hover {
   border: none;
   border-radius: 10px;
   background: var(--accent);
-  color: var(--text-dark);
+  color: #000;
   font-weight: 700;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s ease;
+  box-shadow: 0 0 10px var(--accent);
 }
 #orderForm button[type="submit"]:hover {
   background: var(--accent-hover);
@@ -200,9 +206,9 @@ nav a:hover {
   background: var(--accent);
   padding: 12px 20px;
   border-radius: 12px;
-  color: var(--text-dark);
+  color: #000;
   font-weight: 700;
-  box-shadow: 0 0 15px #d98affcc;
+  box-shadow: 0 0 15px var(--accent-hover);
   z-index: 1200;
 }
 
