@@ -206,5 +206,19 @@ if (vipBtn) {
     }
   });
 
+document.getElementById('orderToggle').addEventListener('click', () => {
+  document.getElementById('orderTitle').textContent = "Оформление заказа";
+  document.getElementById('personSelect').disabled = false;
+  document.getElementById('serviceSelect').innerHTML = '<option value="" disabled selected>-- Сначала выберите сотрудницу --</option>';
+  document.getElementById('serviceSelect').disabled = true;
+  document.getElementById('orderDate').style.display = '';
+  document.getElementById('promoCode').style.display = '';
+  document.getElementById('finalPrice').textContent = '';
+  document.getElementById('orderForm').reset();
+
+  document.getElementById('order').style.display = 'block';
+  setTimeout(() => document.getElementById('order').classList.add('show'), 10);
+});
+
   renderServices();
 });
