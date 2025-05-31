@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Эскорт Клуб - Заказ</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Roboto&display=swap" rel="stylesheet">
+  <audio id="ui-open" src="https://cdn.pixabay.com/audio/2022/10/10/audio_e0f96cc2cd.mp3" preload="auto"></audio>
+  <audio id="ui-success" src="https://cdn.pixabay.com/audio/2022/03/22/audio_ef2d204e02.mp3" preload="auto"></audio>
+  <style>
+    input:focus, select:focus {
+      animation: pulseGlow 1s ease-out;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 rgba(255, 0, 204, 0); }
+      50% { box-shadow: 0 0 15px var(--accent); }
+      100% { box-shadow: 0 0 0 rgba(255, 0, 204, 0); }
+    }
+    .neon-card {
+      animation: neonPop 0.4s ease-out;
+      box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-hover);
+      transition: transform 0.4s ease;
+      transform-style: preserve-3d;
+    }
+    .neon-card:hover {
+      transform: perspective(800px) rotateX(6deg) rotateY(-6deg);
+    }
+    @keyframes neonPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      60% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    .submit-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 0 15px var(--accent-hover);
+    }
+  </style>
+</head>
+<body>
+  <div id="overlay" class="overlay hidden"></div>
+
+  <div id="order-popup" class="popup hidden">
+    <form id="order-form" class="form-glass neon-card">
+      <h2 class="form-title">Оформление заказа</h2>
+
+      <label for="name">Имя клиента</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="service">Выберите услугу</label>
+      <select id="service" name="service">
+        <option value="massage">Массаж</option>
+        <option value="escort">Эскорт</option>
+      </select>
+
+      <label for="time">Желаемое время</label>
+      <input type="datetime-local" id="time" name="time" required>
+
+      <button type="submit" class="submit-btn">Забронировать</button>
+    </form>
+  </div>
+
+  <button id="open-popup" class="order-button">Сделать заказ</button>
+
+  <script src="script.js"></script>
+</body>
+</html>
