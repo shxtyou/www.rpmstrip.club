@@ -220,3 +220,31 @@ nav a:hover {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+.service-card {
+  background: linear-gradient(135deg, #ff00cc, #3333ff);
+  padding: 15px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  box-shadow: 0 0 15px var(--accent);
+  color: #fff;
+  text-shadow: 0 0 4px #000;
+}
+.service-card:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ffcc00, #ff00cc);
+  box-shadow: 0 0 25px var(--accent-hover);
+  color: #000;
+  text-shadow: none;
+}
+.service-card h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+.service-card p {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
