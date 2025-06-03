@@ -26,8 +26,32 @@ window.addEventListener('DOMContentLoaded', () => {
     ]
   };
 
+  const container = document.getElementById('servicesContainer');
+  const groupOption = document.getElementById('groupOption');
+  const groupPartnerSelect = document.getElementById('groupPartnerSelect');
+  const customPartnerName = document.getElementById('customPartnerName');
+  const serviceSelect = document.getElementById('serviceSelect');
+  const personSelect = document.getElementById('personSelect');
+  const finalPrice = document.getElementById('finalPrice');
+  const promoInput = document.getElementById('promoCode');
+  const orderDateInput = document.getElementById('orderDate');
+
+  orderDateInput.min = new Date().toISOString().split('T')[0];
+
+  document.querySelectorAll('.tab-link').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const tabId = link.dataset.tab;
+
+      document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+      document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+
+      document.getElementById(tabId)?.classList.add('active');
+      link.classList.add('active');
+    });
+  });
+
   function renderServices() {
-    const container = document.getElementById('servicesContainer');
     container.innerHTML = '';
     const allServices = [...services.briz, ...services.lisa, ...services.both];
     const gradients = [
@@ -56,27 +80,75 @@ window.addEventListener('DOMContentLoaded', () => {
       card.dataset.index = i;
       container.appendChild(card);
     });
-
-    const vipBtn = document.getElementById('vipOrderBtn');
-    if (vipBtn) {
-      vipBtn.addEventListener('click', () => {
-        const order = document.getElementById('order');
-        order.style.display = 'block';
-        setTimeout(() => order.classList.add('show'), 10);
-
-        document.getElementById('orderTitle').textContent = "Оформление VIP";
-
-        document.getElementById('personSelect').disabled = true;
-        document.getElementById('serviceSelect').innerHTML = '<option selected>VIP Клиент</option>';
-        document.getElementById('serviceSelect').disabled = true;
-
-        document.getElementById('orderDate').style.display = 'none';
-        document.getElementById('promoCode').style.display = 'none';
-
-        document.getElementById('finalPrice').textContent = 'Итоговая цена: 150,000$';
-      });
-    }
   }
+
+  function openOrderPopup() {
+    document.getElementById('order').style.display = 'block';
+    setTimeout(() => document.getElementById('order').classList.add('show'), 10);
+  }
+
+  container.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-index]');
+    if (!btn) return;
+    const index = +btn.dataset.index;
+    const all = [...services.briz, ...services.lisa, ...services.both];
+    const service = all[index];
+    openOrderPopup();
+    serviceSelect.innerHTML = `<option selected>${service.name}</option>`;
+    serviceSelect.disabled = true;
+    updateFinalPrice();
+  });
+
+  personSelect.addEventListener('change', () => {
+    updateServiceSelect(personSelect.value);
+  });
+
+  serviceSelect.addEventListener('change', () => {
+    const selected = serviceSelect.value;
+    if (selected.includes('Групповой секс')) {
+      groupOption.style.display = 'block';
+    } else {
+      groupOption.style.display = 'none';
+      customPartnerName.style.display = 'none';
+    }
+    updateFinalPrice();
+  });
+
+  groupPartnerSelect.addEventListener('change', () => {
+    const show = groupPartnerSelect.value === 'custom';
+    customPartnerName.style.display = show ? 'block' : 'none';
+  });
+
+  promoInput.addEventListener('input', updateFinalPrice);
+
+  function updateServiceSelect(name) {
+    const key = name.toLowerCase() === 'бриз' ? 'briz' : 'lisa';
+    const all = [...services[key], ...services.both];
+    serviceSelect.innerHTML = '<option disabled selected>-- Выберите услугу --</option>';
+    all.forEach(s => {
+      const opt = document.createElement('option');
+      opt.textContent = s.name;
+      opt.value = s.name;
+      serviceSelect.appendChild(opt);
+    });
+    serviceSelect.disabled = false;
+  }
+
+  function updateFinalPrice() {
+    const selected = serviceSelect.value;
+    const all = [...services.briz, ...services.lisa, ...services.both];
+    const promo = promoInput.value.trim();
+    const s = all.find(x => x.name === selected);
+    if (!s) return finalPrice.textContent = '';
+    let price = s.price;
+    if (promo.toUpperCase() === 'YRA') price *= 0.95;
+    finalPrice.textContent = `Итоговая цена: ${Math.round(price).toLocaleString()}$`;
+  }
+
+  document.getElementById('closeOrder').addEventListener('click', () => {
+    document.getElementById('order').classList.remove('show');
+    setTimeout(() => document.getElementById('order').style.display = 'none', 400);
+  });
 
   renderServices();
 });
