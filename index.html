@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Velvet Club</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="fade-in glow">Velvet Club</h1>
+    <nav class="fade-in fade-in-delay">
+      <a href="#" data-tab="desc" class="tab-link active">Описание</a>
+      <a href="#" data-tab="price" class="tab-link">Прайс</a>
+      <a href="#" data-tab="vip" class="tab-link">VIP Клиент</a>
+    </nav>
+    <div id="desc" class="card active fade-in">
+      <h2 class="glow">Что на сайте</h2>
+      <p><strong>Velvet Club</strong> — цифровое пространство развлечений в RP мире.</p>
+    </div>
+    <div id="price" class="card fade-in">
+      <h2 class="glow">Прайс</h2>
+      <div class="service-grid" id="servicesContainer"></div>
+    </div>
+    <div id="vip" class="card fade-in">
+      <h2 class="glow">👑 VIP Клиент</h2>
+      <ul>
+        <li>Персональный менеджер</li>
+        <li>Приоритетное бронирование</li>
+        <li>10% скидка</li>
+      </ul>
+      <div style="text-align:center; margin-top:20px;">
+        <button id="vipOrderBtn" class="pulse">Оформить VIP</button>
+      </div>
+    </div>
+  </div>
+  <div id="order" class="order-popup fade-in" style="display:none;">
+    <h2>Заказ</h2>
+    <form id="orderForm">
+      <label for="discordNick">Discord:</label>
+      <input type="text" id="discordNick" required />
+      <label for="rpmNick">РПМ-ник:</label>
+      <input type="text" id="rpmNick" required />
+      <label for="personSelect">Сотрудница:</label>
+      <select id="personSelect" required>
+        <option value="Бриз">Бриз</option>
+        <option value="Лиса">Лиса</option>
+      </select>
+      <label for="serviceSelect">Услуга:</label>
+      <select id="serviceSelect" required disabled>
+        <option value="">-- Выберите --</option>
+      </select>
+      <div id="groupOption" style="display:none;">
+        <label>Партнёр:</label>
+        <select id="groupPartnerSelect">
+          <option value="escort">Эскортница</option>
+          <option value="custom">Другой</option>
+        </select>
+        <input type="text" id="customPartnerName" placeholder="Ник" style="display:none;" />
+      </div>
+      <label for="orderDate">Дата:</label>
+      <input type="date" id="orderDate" required />
+      <label for="promoCode">Промокод:</label>
+      <input type="text" id="promoCode" />
+      <div id="finalPrice" style="margin-top:10px;"></div>
+      <button type="submit">Отправить</button>
+    </form>
+    <button id="closeOrder">Закрыть</button>
+  </div>
+</body>
+</html>
