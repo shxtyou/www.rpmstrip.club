@@ -1,11 +1,60 @@
 :root {
   --bg-dark: linear-gradient(160deg, #0f001e, #2a003f, #47006b);
-  --bg-light: #fdf5ff;
-  --text-dark: #1a001f;
   --text-light: #f2e9ff;
+  --text-dark: #1a001f;
+  --bg-light: #fdf5ff;
   --accent: #ff00cc;
   --accent-hover: #ff66ff;
+  --glow: 0 0 20px #ff00cc, 0 0 40px #ff00cc, 0 0 60px #ff00cc;
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
+}
+
+[data-theme="dark"] body {
+  background: var(--bg-dark);
+  color: var(--text-light);
+}
+
+.hero {
+  position: relative;
+  height: 100vh;
+  background: url('364_20250603234502.png') no-repeat center center/cover;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 80px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-family: 'Creepster', cursive;
+  font-size: 4rem;
+  color: #fff;
+  text-shadow: var(--glow);
+}
+
+h2.glow {
+  text-align: center;
+  color: var(--accent);
+  text-shadow: var(--glow);
+}
+
+.card {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: var(--glow);
+  color: #fff;
+  margin-top: 20px;
+}
+
 [data-theme="dark"] body {
   background: var(--bg-dark);
   color: var(--text-light);
