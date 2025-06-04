@@ -18,6 +18,16 @@ window.addEventListener('DOMContentLoaded', () => {
       { name: '🕯 Игры с воском', price: 17000 },
       { name: '🕴 МейлДом', price: 22000 },
     ],
+    zyamba: [
+      { name: '💄 Макияж RP', price: 18000 },
+      { name: '💃 RP танец', price: 25000 },
+      { name: '🧼 RP омовение', price: 22000 }
+  ],
+    tefi: [
+      { name: '🎲 Рандом-сценарий', price: 26000 },
+      { name: '🫂 RP терапия', price: 28000 },
+      { name: '🧿 Мистика + Гадание', price: 30000 }
+  ],
     both: [
       { name: '💃 Стриптиз / Приват-танец', price: 10000 },
       { name: '🛁 Совместная ванна + массаж', price: 25000 },
@@ -121,18 +131,25 @@ window.addEventListener('DOMContentLoaded', () => {
 
   promoInput.addEventListener('input', updateFinalPrice);
 
-  function updateServiceSelect(name) {
-    const key = name.toLowerCase() === 'бриз' ? 'briz' : 'lisa';
-    const all = [...services[key], ...services.both];
-    serviceSelect.innerHTML = '<option disabled selected>-- Выберите услугу --</option>';
-    all.forEach(s => {
-      const opt = document.createElement('option');
-      opt.textContent = s.name;
-      opt.value = s.name;
-      serviceSelect.appendChild(opt);
-    });
-    serviceSelect.disabled = false;
+function updateServiceSelect(name) {
+  let key;
+  switch (name.toLowerCase()) {
+    case 'бриз': key = 'briz'; break;
+    case 'лиса': key = 'lisa'; break;
+    case 'зямба': key = 'zyamba'; break;
+    case 'тефи': key = 'tefi'; break;
+    default: return;
   }
+  const all = [...services[key], ...services.both];
+  serviceSelect.innerHTML = '<option disabled selected>-- Выберите услугу --</option>';
+  all.forEach(s => {
+    const opt = document.createElement('option');
+    opt.textContent = s.name;
+    opt.value = s.name;
+    serviceSelect.appendChild(opt);
+  });
+  serviceSelect.disabled = false;
+}
 
   function updateFinalPrice() {
     const selected = serviceSelect.value;
