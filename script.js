@@ -63,7 +63,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function renderServices() {
     container.innerHTML = '';
-    const allServices = [...services.briz, ...services.lisa, ...services.both];
+const allServices = [
+  ...services.briz,
+  ...services.lisa,
+  ...services.zyamba,
+  ...services.tefi,
+  ...services.both
+];
     const gradients = [
       'linear-gradient(135deg, #ff007a, #9e00ff)',
       'linear-gradient(135deg, #ff0088, #ffcc00)',
@@ -140,7 +146,14 @@ function updateServiceSelect(name) {
     case 'тефи': key = 'tefi'; break;
     default: return;
   }
-  const all = [...services[key], ...services.both];
+  const all = [
+  ...services.briz,
+  ...services.lisa,
+  ...services.zyamba,
+  ...services.tefi,
+  ...services.both
+];
+
   serviceSelect.innerHTML = '<option disabled selected>-- Выберите услугу --</option>';
   all.forEach(s => {
     const opt = document.createElement('option');
